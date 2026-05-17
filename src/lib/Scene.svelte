@@ -81,16 +81,16 @@
   function explosionProgress(t: number): number {
     if (t < 0.10) return 0;
     if (t < 0.20) return smoothstep((t - 0.10) / 0.10);
-    if (t < 0.58) return 1;
-    if (t < 0.64) return 1 - smoothstep((t - 0.58) / 0.06);
+    if (t < 0.62) return 1;
+    if (t < 0.68) return 1 - smoothstep((t - 0.62) / 0.06);
     return 0;
   }
 
   function labelOpacity(t: number): number {
     if (t < 0.18) return 0;
     if (t < 0.24) return smoothstep((t - 0.18) / 0.06);
-    if (t < 0.58) return 1;
-    if (t < 0.62) return 1 - smoothstep((t - 0.58) / 0.04);
+    if (t < 0.62) return 1;
+    if (t < 0.66) return 1 - smoothstep((t - 0.62) / 0.04);
     return 0;
   }
 
@@ -99,7 +99,7 @@
     const t = scrollState.progress;
 
     // Look-at slides from Ferrari to ToyCar only after explosion is done.
-    const transitT = smoothstep(clamp((t - 0.65) / 0.20, 0, 1));
+    const transitT = smoothstep(clamp((t - 0.70) / 0.18, 0, 1));
     const tx = lerp(FERRARI_POS[0], TOYCAR_POS[0], transitT);
     const ty = lerp(FERRARI_POS[1], TOYCAR_POS[1], transitT);
     const tz = lerp(FERRARI_POS[2], TOYCAR_POS[2], transitT);
