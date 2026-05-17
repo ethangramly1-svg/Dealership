@@ -23,7 +23,9 @@
   const FERRARI_POS: [number, number, number] = [0, 0, 0];
   const TOYCAR_POS: [number, number, number] = [0, 0, -12];
   const TRUCK_POS: [number, number, number] = [0, 0, -32];
-  const TOYCAR_SCALE = 35;
+  // ToyCar.glb has a baked-in root scale of 0.0001, so this scale gets
+  // multiplied with that to produce the actual rendered size. 65 → ~4.75m.
+  const TOYCAR_SCALE = 65;
 
   const FERRARI_PARTS = [
     { name: 'rim_fl', offset: new Vector3(-1.7, 0.35, 0.65), title: 'Front Left Wheel', detail: 'Forged aluminum rim · carbon-ceramic disc visible behind' },
