@@ -74,11 +74,21 @@
 
 <section>
   <span class="num">04</span>
-  <h2>Pink horizon.</h2>
+  <h2>The compact.</h2>
   <p>
-    Arrival. The compact takes center. Pink rim light wraps the body. The
-    void behind it stretches — the corridor keeps going, and so does the
-    inventory.
+    The second slot. Smaller footprint, same level of presentation.
+    Whatever fits this slot in our actual inventory rotates through —
+    sedan, hatchback, crossover. The light wraps it the same way.
+  </p>
+</section>
+
+<section>
+  <span class="num">05</span>
+  <h2>The truck.</h2>
+  <p>
+    Bed, towing capacity, working tires. The third silhouette in the
+    corridor. Pink rim light against the silhouette, dust in the fog.
+    Built different — and we've got a row of them.
   </p>
 </section>
 

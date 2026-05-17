@@ -14,15 +14,17 @@
   const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
   const smoothstep = (t: number) => t * t * (3 - 2 * t);
 
+  // ─── Corridor layout ─────────────────────────────────────────────
+  // Three cars at fixed world positions. Camera flies down the corridor
+  // and orbits each in turn. Distances chosen so each car gets ~30% of
+  // total scroll, with transit between cars.
+  // ─────────────────────────────────────────────────────────────────
   const FERRARI_POS: [number, number, number] = [0, 0, 0];
   const TOYCAR_POS: [number, number, number] = [0, 0, -28];
+  const TRUCK_POS: [number, number, number] = [0, 0, -56];
   const TOYCAR_SCALE = 12;
+  const TRUCK_SCALE = 0.7;
 
-  // ─── Ferrari part catalog ────────────────────────────────────────
-  // Names match the mesh names inside threejs.org/examples/models/gltf/ferrari.glb.
-  // Each part has a directional offset applied at peak explosion (progress=1)
-  // and label copy that floats with the part on screen.
-  // ─────────────────────────────────────────────────────────────────
   const FERRARI_PARTS = [
     { name: 'rim_fl', offset: new Vector3(-1.7, 0.35, 0.65), title: 'Front Left Wheel', detail: 'Forged aluminum rim · carbon-ceramic disc visible behind' },
     { name: 'rim_fr', offset: new Vector3(1.7, 0.35, 0.65), title: 'Front Right Wheel', detail: 'Mirror of FL · 1.0 mm dimensional tolerance' },
@@ -67,47 +69,59 @@
   }
 
   // ─── Phase mapping (scroll progress → explosion / labels / camera) ──
-  // The car explodes early and stays exploded for ~38% of total scroll,
-  // covering front view, side view, and most of the rear view. It only
-  // re-assembles right before the camera transit toward the ToyCar.
-  //
-  // intact:        0.00 - 0.10
-  // expanding:     0.10 - 0.20
-  // held:          0.20 - 0.58  ← labels visible for the whole held phase
-  // reassembling:  0.58 - 0.64
-  // intact:        0.64+
-  // transit:       0.65 - 0.85  (camera target slides Ferrari → ToyCar)
+  // Now over 3 cars: Ferrari (0-0.55), ToyCar (~0.55-0.75), Truck (0.75-1.0).
+  // Explosion happens during the Ferrari section only.
   // ────────────────────────────────────────────────────────────────────
   function explosionProgress(t: number): number {
     if (t < 0.10) return 0;
     if (t < 0.20) return smoothstep((t - 0.10) / 0.10);
-    if (t < 0.62) return 1;
-    if (t < 0.68) return 1 - smoothstep((t - 0.62) / 0.06);
+    if (t < 0.50) return 1;
+    if (t < 0.56) return 1 - smoothstep((t - 0.50) / 0.06);
     return 0;
   }
 
   function labelOpacity(t: number): number {
     if (t < 0.18) return 0;
     if (t < 0.24) return smoothstep((t - 0.18) / 0.06);
-    if (t < 0.62) return 1;
-    if (t < 0.66) return 1 - smoothstep((t - 0.62) / 0.04);
+    if (t < 0.50) return 1;
+    if (t < 0.54) return 1 - smoothstep((t - 0.50) / 0.04);
     return 0;
   }
 
-  // ─── Camera flythrough ──────────────────────────────────────────
+  // ─── Camera flythrough across 3 cars ────────────────────────────
+  // Look-at target glides: Ferrari (0-0.58), transit (0.58-0.66),
+  // ToyCar (0.66-0.80), transit (0.80-0.86), Truck (0.86-1.0).
+  // Each car gets its own orbit phase plus blends at the seams.
+  // ─────────────────────────────────────────────────────────────────
+  function blendTarget(t: number): [number, number, number] {
+    if (t < 0.58) return FERRARI_POS as unknown as [number, number, number];
+    if (t < 0.66) {
+      const u = smoothstep((t - 0.58) / 0.08);
+      return [
+        lerp(FERRARI_POS[0], TOYCAR_POS[0], u),
+        lerp(FERRARI_POS[1], TOYCAR_POS[1], u),
+        lerp(FERRARI_POS[2], TOYCAR_POS[2], u)
+      ];
+    }
+    if (t < 0.80) return TOYCAR_POS as unknown as [number, number, number];
+    if (t < 0.86) {
+      const u = smoothstep((t - 0.80) / 0.06);
+      return [
+        lerp(TOYCAR_POS[0], TRUCK_POS[0], u),
+        lerp(TOYCAR_POS[1], TRUCK_POS[1], u),
+        lerp(TOYCAR_POS[2], TRUCK_POS[2], u)
+      ];
+    }
+    return TRUCK_POS as unknown as [number, number, number];
+  }
+
   let cam = $derived.by(() => {
     const t = scrollState.progress;
+    const [tx, ty, tz] = blendTarget(t);
 
-    // Look-at slides from Ferrari to ToyCar only after explosion is done.
-    const transitT = smoothstep(clamp((t - 0.70) / 0.18, 0, 1));
-    const tx = lerp(FERRARI_POS[0], TOYCAR_POS[0], transitT);
-    const ty = lerp(FERRARI_POS[1], TOYCAR_POS[1], transitT);
-    const tz = lerp(FERRARI_POS[2], TOYCAR_POS[2], transitT);
-
-    // 1.5 revolutions over scroll; slight slowdown during the held phase.
-    const yaw = lerp(0, Math.PI * 1.6, t);
+    // 2 revolutions across the whole scroll (more orbital interest with 3 cars).
+    const yaw = lerp(0, Math.PI * 2.0, t);
     const pitch = lerp(0.22, 0.7, t * t);
-    // Pull back a touch during the explosion so the whole car fits in frame.
     const radius = lerp(6.5, 9.5, t * t) + explosionProgress(t) * 1.2;
 
     return {
@@ -120,16 +134,19 @@
     };
   });
 
-  const tent = (t: number, peak: number, width: number = 0.55) =>
+  // ─── Mood lighting — 3 colored lights peak at each car position ──
+  // Cyan peaks near Ferrari, magenta near ToyCar, pink near Truck.
+  // ─────────────────────────────────────────────────────────────────
+  const tent = (t: number, peak: number, width: number = 0.45) =>
     Math.max(0, 1 - Math.abs(t - peak) / width);
 
   let mood = $derived.by(() => {
     const t = scrollState.progress;
     return {
       cyan: tent(t, 0.0) * 2.2,
-      magenta: tent(t, 0.5) * 2.4,
-      pink: tent(t, 1.0) * 2.2,
-      fogDensity: lerp(0.018, 0.06, t * t)
+      magenta: tent(t, 0.7) * 2.4,
+      pink: tent(t, 1.0) * 2.4,
+      fogDensity: lerp(0.018, 0.055, t * t)
     };
   });
 
@@ -142,8 +159,8 @@
 
   let ferrariLoaded = $state(false);
   let toyCarLoaded = $state(false);
+  let truckLoaded = $state(false);
 
-  // ─── Per-frame: explode parts + project labels to screen ────────
   const { camera, size } = useThrelte();
   const projection = new Vector3();
 
@@ -151,7 +168,6 @@
     const t = scrollState.progress;
     const exp = explosionProgress(t);
 
-    // Apply per-part offsets to the actual Three.js scene graph.
     for (const part of parts) {
       part.mesh.position.set(
         part.restPos.x + part.offset.x * exp,
@@ -160,7 +176,6 @@
       );
     }
 
-    // Project each part's world position to 2D screen px for HTML labels.
     const op = labelOpacity(t);
     if (!parts.length || op < 0.01) {
       if (labelState.items.length) labelState.items = [];
@@ -186,11 +201,10 @@
 
 <T.FogExp2 args={['#07071a', mood.fogDensity]} attach="fog" />
 
-<T.PerspectiveCamera bind:ref={cameraRef} makeDefault fov={42} near={0.1} far={120} />
+<T.PerspectiveCamera bind:ref={cameraRef} makeDefault fov={42} near={0.1} far={160} />
 
 <T.AmbientLight intensity={0.35} color="#3a3a6a" />
 
-<!-- Mood lights track the current camera target. -->
 <T.DirectionalLight position={[cam.tx + 6, cam.ty + 8, cam.tz + 6]} intensity={mood.cyan} color="#00f0ff" />
 <T.DirectionalLight position={[cam.tx - 6, cam.ty + 5, cam.tz - 3]} intensity={mood.magenta} color="#b026ff" />
 <T.PointLight
@@ -201,7 +215,6 @@
   decay={1.5}
 />
 
-<!-- Headlight kicker near the Ferrari only. -->
 <T.SpotLight
   position={[FERRARI_POS[0], FERRARI_POS[1] + 2, FERRARI_POS[2] + 6]}
   angle={0.55}
@@ -212,8 +225,9 @@
   decay={1.2}
 />
 
-<T.Mesh position={[0, -0.01, -14]} rotation={[-Math.PI / 2, 0, 0]}>
-  <T.PlaneGeometry args={[80, 80]} />
+<!-- Floor extends down the entire corridor. -->
+<T.Mesh position={[0, -0.01, -28]} rotation={[-Math.PI / 2, 0, 0]}>
+  <T.PlaneGeometry args={[80, 130]} />
   <T.MeshStandardMaterial color="#0a0a1f" roughness={0.4} metalness={0.6} />
 </T.Mesh>
 
@@ -225,6 +239,12 @@
 {/if}
 {#if !toyCarLoaded}
   <T.Mesh position={[TOYCAR_POS[0], TOYCAR_POS[1] + 0.5, TOYCAR_POS[2]]}>
+    <T.SphereGeometry args={[0.35, 24, 24]} />
+    <T.MeshStandardMaterial color="#ffffff" emissive="#b026ff" emissiveIntensity={2} />
+  </T.Mesh>
+{/if}
+{#if !truckLoaded}
+  <T.Mesh position={[TRUCK_POS[0], TRUCK_POS[1] + 0.5, TRUCK_POS[2]]}>
     <T.SphereGeometry args={[0.35, 24, 24]} />
     <T.MeshStandardMaterial color="#ffffff" emissive="#ff006e" emissiveIntensity={2} />
   </T.Mesh>
@@ -245,5 +265,14 @@
     {dracoLoader}
     onload={() => { toyCarLoaded = true; console.log('[3d-hero] toycar loaded ✓'); }}
     onerror={(e) => console.error('[3d-hero] toycar FAILED:', e)}
+  />
+</T.Group>
+
+<T.Group position={TRUCK_POS} scale={TRUCK_SCALE}>
+  <GLTF
+    url="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/CesiumMilkTruck/glTF-Binary/CesiumMilkTruck.glb"
+    {dracoLoader}
+    onload={() => { truckLoaded = true; console.log('[3d-hero] truck loaded ✓'); }}
+    onerror={(e) => console.error('[3d-hero] truck FAILED:', e)}
   />
 </T.Group>
