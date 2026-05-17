@@ -146,7 +146,7 @@
       cyan: tent(t, 0.0) * 2.2,
       magenta: tent(t, 0.7) * 2.4,
       pink: tent(t, 1.0) * 2.4,
-      fogDensity: lerp(0.018, 0.055, t * t)
+      fogDensity: lerp(0.018, 0.075, t * t)
     };
   });
 
@@ -243,8 +243,9 @@
     <T.MeshStandardMaterial color="#ffffff" emissive="#b026ff" emissiveIntensity={2} />
   </T.Mesh>
 {/if}
-<!-- Ferrari: culled once we're well past it so it doesn't ghost through fog. -->
-<T.Group position={FERRARI_POS} visible={scrollState.progress < 0.65}>
+<!-- Ferrari: aggressively culled once re-assembly completes so it can't
+     ghost through fog during the ToyCar/Denali phases. -->
+<T.Group position={FERRARI_POS} visible={scrollState.progress < 0.55}>
   <GLTF
     url="https://threejs.org/examples/models/gltf/ferrari.glb"
     {dracoLoader}

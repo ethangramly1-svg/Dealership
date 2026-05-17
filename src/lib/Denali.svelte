@@ -8,9 +8,18 @@
   // get a real Denali .glb — e.g. download from Sketchfab and drop in
   // static/models/denali.glb, then point at /Dealership/models/denali.glb.
 
-  const BODY = { color: '#0a0a14', roughness: 0.28, metalness: 0.88 };
-  const CHROME = { color: '#a0a0a8', roughness: 0.05, metalness: 1.0 };
-  const TIRE = { color: '#080808', roughness: 0.7, metalness: 0.25 };
+  // Medium slate body so the SUV reads against the dark fog instead of
+  // disappearing into it. Slight emissive lift keeps it present even when
+  // mood lights are between peaks.
+  const BODY = {
+    color: '#5a6275',
+    roughness: 0.32,
+    metalness: 0.78,
+    emissive: '#1a1f2c',
+    emissiveIntensity: 0.35
+  };
+  const CHROME = { color: '#c8c8d0', roughness: 0.05, metalness: 1.0 };
+  const TIRE = { color: '#181820', roughness: 0.7, metalness: 0.25 };
 </script>
 
 <!-- Lower body (between wheels) -->

@@ -84,11 +84,12 @@
 
 <section>
   <span class="num">05</span>
-  <h2>The truck.</h2>
+  <h2>The Denali.</h2>
   <p>
-    Bed, towing capacity, working tires. The third silhouette in the
-    corridor. Pink rim light against the silhouette, dust in the fog.
-    Built different — and we've got a row of them.
+    Full-size SUV silhouette. Chrome belt-line, three-bar grille, tall
+    cabin. Pink rim light wraps the body and the headlights answer in
+    cyan. This is the third slot — luxury utility, ready for the family,
+    the worksite, or the weekend.
   </p>
 </section>
 
