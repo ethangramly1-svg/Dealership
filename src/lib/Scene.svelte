@@ -3,6 +3,7 @@
   import { GLTF } from '@threlte/extras';
   import { scrollState } from './scroll.svelte';
   import { labelState } from './labels.svelte';
+  import Denali from './Denali.svelte';
   import { Box3, Vector3 } from 'three';
   import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
   import type { PerspectiveCamera, Object3D } from 'three';
@@ -23,7 +24,6 @@
   const TOYCAR_POS: [number, number, number] = [0, 0, -28];
   const TRUCK_POS: [number, number, number] = [0, 0, -56];
   const TOYCAR_SCALE = 12;
-  const TRUCK_SCALE = 0.7;
 
   const FERRARI_PARTS = [
     { name: 'rim_fl', offset: new Vector3(-1.7, 0.35, 0.65), title: 'Front Left Wheel', detail: 'Forged aluminum rim · carbon-ceramic disc visible behind' },
@@ -159,7 +159,7 @@
 
   let ferrariLoaded = $state(false);
   let toyCarLoaded = $state(false);
-  let truckLoaded = $state(false);
+  // Denali is built from primitives — no async load, so always "ready".
 
   const { camera, size } = useThrelte();
   const projection = new Vector3();
@@ -243,14 +243,8 @@
     <T.MeshStandardMaterial color="#ffffff" emissive="#b026ff" emissiveIntensity={2} />
   </T.Mesh>
 {/if}
-{#if !truckLoaded}
-  <T.Mesh position={[TRUCK_POS[0], TRUCK_POS[1] + 0.5, TRUCK_POS[2]]}>
-    <T.SphereGeometry args={[0.35, 24, 24]} />
-    <T.MeshStandardMaterial color="#ffffff" emissive="#ff006e" emissiveIntensity={2} />
-  </T.Mesh>
-{/if}
-
-<T.Group position={FERRARI_POS}>
+<!-- Ferrari: culled once we're well past it so it doesn't ghost through fog. -->
+<T.Group position={FERRARI_POS} visible={scrollState.progress < 0.65}>
   <GLTF
     url="https://threejs.org/examples/models/gltf/ferrari.glb"
     {dracoLoader}
@@ -259,7 +253,8 @@
   />
 </T.Group>
 
-<T.Group position={TOYCAR_POS} scale={TOYCAR_SCALE}>
+<!-- ToyCar: visible from before its phase through end (no ghosting issue here). -->
+<T.Group position={TOYCAR_POS} scale={TOYCAR_SCALE} visible={scrollState.progress < 0.90}>
   <GLTF
     url="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/ToyCar/glTF-Binary/ToyCar.glb"
     {dracoLoader}
@@ -268,11 +263,7 @@
   />
 </T.Group>
 
-<T.Group position={TRUCK_POS} scale={TRUCK_SCALE}>
-  <GLTF
-    url="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/CesiumMilkTruck/glTF-Binary/CesiumMilkTruck.glb"
-    {dracoLoader}
-    onload={() => { truckLoaded = true; console.log('[3d-hero] truck loaded ✓'); }}
-    onerror={(e) => console.error('[3d-hero] truck FAILED:', e)}
-  />
+<!-- Denali-silhouette SUV built from primitives. Swap for a real .glb later. -->
+<T.Group position={TRUCK_POS}>
+  <Denali />
 </T.Group>
