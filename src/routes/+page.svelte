@@ -3,6 +3,7 @@
   import Scene from '$lib/Scene.svelte';
   import Renderer from '$lib/Renderer.svelte';
   import { bindWindowScroll } from '$lib/scroll.svelte';
+  import { labelState } from '$lib/labels.svelte';
   import '$lib/theatre'; // side-effect: boots Theatre.js Studio panel in dev
 
   $effect(() => bindWindowScroll());
@@ -13,6 +14,21 @@
     <Scene />
     <Renderer />
   </Canvas>
+</div>
+
+<!-- HTML labels positioned via per-frame Vector3.project() — see Scene.svelte useTask. -->
+<div class="labels-overlay">
+  {#each labelState.items as label (label.id)}
+    {#if label.visible}
+      <div class="label" style="left: {label.x}px; top: {label.y}px; opacity: {label.opacity};">
+        <div class="dot"></div>
+        <div class="card">
+          <span class="t">{label.title}</span>
+          <span class="d">{label.detail}</span>
+        </div>
+      </div>
+    {/if}
+  {/each}
 </div>
 
 <header>
@@ -38,21 +54,31 @@
 
 <section>
   <span class="num">02</span>
-  <h2>Magenta arc.</h2>
+  <h2>Anatomy.</h2>
   <p>
-    The camera lifts and pulls back. The corridor opens. Fog deepens.
-    Magenta replaces cyan as the dominant key. A second silhouette appears
-    in the haze ahead.
+    Every bolt accounted for. Keep scrolling and the chassis blows apart —
+    rims, glass, body, all separated so you can see what's actually inside
+    a car this clean. Labels appear over each piece.
   </p>
 </section>
 
 <section>
   <span class="num">03</span>
+  <h2>Magenta arc.</h2>
+  <p>
+    Parts re-assemble. The camera lifts and the corridor opens. Magenta
+    replaces cyan as the dominant key. A second silhouette is in the
+    haze ahead.
+  </p>
+</section>
+
+<section>
+  <span class="num">04</span>
   <h2>Pink horizon.</h2>
   <p>
     Arrival. The compact takes center. Pink rim light wraps the body. The
-    void behind it stretches out — the corridor keeps going, and so does
-    the inventory.
+    void behind it stretches — the corridor keeps going, and so does the
+    inventory.
   </p>
 </section>
 
@@ -75,6 +101,62 @@
     inset: 0;
     z-index: 0;
     pointer-events: none;
+  }
+
+  .labels-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .label {
+    position: absolute;
+    transform: translate(8px, -50%);
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    pointer-events: none;
+    transition: opacity 0.12s linear;
+  }
+
+  .dot {
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 50%;
+    background: var(--neon-blue);
+    box-shadow:
+      0 0 0 2px rgba(0, 240, 255, 0.25),
+      0 0 14px var(--neon-blue);
+    flex-shrink: 0;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.18rem;
+    padding: 0.45rem 0.85rem;
+    background: rgba(7, 7, 26, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 240, 255, 0.35);
+    border-radius: 0.45rem;
+    color: var(--ink);
+    min-width: 12rem;
+    max-width: 22rem;
+  }
+
+  .t {
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: var(--ink);
+  }
+
+  .d {
+    font-size: 0.76rem;
+    color: var(--muted);
+    line-height: 1.4;
   }
 
   header,
