@@ -21,9 +21,9 @@
   // total scroll, with transit between cars.
   // ─────────────────────────────────────────────────────────────────
   const FERRARI_POS: [number, number, number] = [0, 0, 0];
-  const TOYCAR_POS: [number, number, number] = [0, 0, -16];
-  const TRUCK_POS: [number, number, number] = [0, 0, -42];
-  const TOYCAR_SCALE = 18;
+  const TOYCAR_POS: [number, number, number] = [0, 0, -12];
+  const TRUCK_POS: [number, number, number] = [0, 0, -32];
+  const TOYCAR_SCALE = 35;
 
   const FERRARI_PARTS = [
     { name: 'rim_fl', offset: new Vector3(-1.7, 0.35, 0.65), title: 'Front Left Wheel', detail: 'Forged aluminum rim · carbon-ceramic disc visible behind' },
