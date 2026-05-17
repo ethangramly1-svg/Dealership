@@ -245,9 +245,10 @@
     <T.MeshStandardMaterial color="#ffffff" emissive="#b026ff" emissiveIntensity={2} />
   </T.Mesh>
 {/if}
-<!-- Ferrari: aggressively culled once re-assembly completes so it can't
-     ghost through fog during the ToyCar/Denali phases. -->
-<T.Group position={FERRARI_POS} visible={scrollState.progress < 0.55}>
+<!-- Ferrari: culled only after the camera has fully transited to the
+     compact (progress ~0.66). Earlier and the user sees it pop out
+     mid-view while still aimed at it. -->
+<T.Group position={FERRARI_POS} visible={scrollState.progress < 0.68}>
   <GLTF
     url="https://threejs.org/examples/models/gltf/ferrari.glb"
     {dracoLoader}
