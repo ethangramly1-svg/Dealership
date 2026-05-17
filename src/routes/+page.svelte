@@ -16,33 +16,57 @@
 </div>
 
 <header>
-  <span class="eyebrow">Built in code · Choreographed by scroll</span>
-  <h1>Drive<br />the Frame.</h1>
-  <p>The camera orbits as you descend. The mood shifts. The void deepens.</p>
+  <span class="eyebrow">AutoNation USA · Centennial · Las Vegas</span>
+  <h1>The Showroom,<br />Reimagined.</h1>
+  <p>Scroll through the corridor. Each car is a moment. The pressure is none.</p>
+  <div class="rating">
+    <span class="stars">★★★★★</span>
+    <span class="rating-num">4.7</span>
+    <span class="rating-meta">· 812 reviews · "No pressure. Fair offer. Felt like a valued customer."</span>
+  </div>
 </header>
 
 <section>
   <span class="num">01</span>
   <h2>Cyan ignition.</h2>
-  <p>Front-quarter view. Headlight kicker into the lens. The cyan key light reads on the chrome and the silhouette is hard.</p>
+  <p>
+    The featured concept rolls into the cyan key light. Hard silhouette,
+    chrome body, headlight kicker straight into the frame. This is how a
+    car wants to be seen.
+  </p>
 </section>
 
 <section>
   <span class="num">02</span>
   <h2>Magenta arc.</h2>
-  <p>Camera sweeps to the high-three-quarter. Magenta takes over from cyan. Fog density picks up — distance starts to matter.</p>
+  <p>
+    The camera lifts and pulls back. The corridor opens. Fog deepens.
+    Magenta replaces cyan as the dominant key. A second silhouette appears
+    in the haze ahead.
+  </p>
 </section>
 
 <section>
   <span class="num">03</span>
   <h2>Pink horizon.</h2>
-  <p>Top-down at altitude. Pink rim light wraps the body. The car is small in a deep neon void.</p>
+  <p>
+    Arrival. The compact takes center. Pink rim light wraps the body. The
+    void behind it stretches out — the corridor keeps going, and so does
+    the inventory.
+  </p>
 </section>
 
 <footer>
-  <span class="num">04</span>
-  <h2>End of sequence.</h2>
-  <p>Tune the choreography in <code>Scene.svelte</code>. Swap models. Layer keyframes. Ship.</p>
+  <span class="num">visit</span>
+  <h2>8570 W Centennial Pkwy<br />Las Vegas, NV 89149</h2>
+  <p class="contact">
+    <a href="tel:7252915110">(725) 291-5110</a> · Open today · Closes 8 PM
+  </p>
+  <p class="testimonial">
+    <em>"Royce Tran is very nice and I made a lot of trouble for him, but
+    he was very patient and helpful. If you want to purchase a vehicle from
+    AutoNation, go to Royce. He is the best."</em>
+  </p>
 </footer>
 
 <style>
@@ -68,6 +92,8 @@
     max-width: 1100px;
     pointer-events: none;
   }
+
+  footer { gap: 1.5rem; }
 
   .eyebrow {
     font-size: 0.78rem;
@@ -101,22 +127,56 @@
     line-height: 1.04;
     color: var(--ink);
     letter-spacing: -0.022em;
-    max-width: 18ch;
+    max-width: 22ch;
   }
 
   p {
     color: var(--muted);
     font-size: clamp(1rem, 1.4vw, 1.15rem);
-    max-width: 50ch;
+    max-width: 52ch;
     line-height: 1.6;
   }
 
-  code {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 0.92em;
-    background: rgba(176, 38, 255, 0.12);
-    padding: 0.1em 0.35em;
-    border-radius: 0.25em;
-    color: var(--neon-purple);
+  .rating {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    font-size: 0.92rem;
+  }
+  .stars {
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    font-size: 1.1rem;
+  }
+  .rating-num {
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .rating-meta {
+    color: var(--muted);
+  }
+
+  .contact {
+    font-size: 1.05rem;
+    color: var(--ink);
+    pointer-events: auto;
+  }
+  .contact a {
+    color: var(--neon-blue);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.4);
+  }
+
+  .testimonial {
+    color: var(--ink);
+    font-size: 1.1rem;
+    line-height: 1.55;
+    border-left: 2px solid var(--neon-purple);
+    padding-left: 1.2rem;
+    max-width: 56ch;
+  }
+  .testimonial em {
+    font-style: normal;
   }
 </style>
