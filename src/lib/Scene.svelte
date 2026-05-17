@@ -67,30 +67,30 @@
   }
 
   // ─── Phase mapping (scroll progress → explosion / labels / camera) ──
-  // The car explodes early (while still being viewed from the front), stays
-  // exploded through the side-quarter view, and only re-assembles once the
-  // camera has rotated well past the front toward the back of the car.
+  // The car explodes early and stays exploded for ~38% of total scroll,
+  // covering front view, side view, and most of the rear view. It only
+  // re-assembles right before the camera transit toward the ToyCar.
   //
-  // intact:        0.00 - 0.13
-  // expanding:     0.13 - 0.23
-  // held:          0.23 - 0.50  ← labels visible for the whole held phase
-  // reassembling:  0.50 - 0.62
-  // intact:        0.62+
+  // intact:        0.00 - 0.10
+  // expanding:     0.10 - 0.20
+  // held:          0.20 - 0.58  ← labels visible for the whole held phase
+  // reassembling:  0.58 - 0.64
+  // intact:        0.64+
   // transit:       0.65 - 0.85  (camera target slides Ferrari → ToyCar)
   // ────────────────────────────────────────────────────────────────────
   function explosionProgress(t: number): number {
-    if (t < 0.13) return 0;
-    if (t < 0.23) return smoothstep((t - 0.13) / 0.10);
-    if (t < 0.50) return 1;
-    if (t < 0.62) return 1 - smoothstep((t - 0.50) / 0.12);
+    if (t < 0.10) return 0;
+    if (t < 0.20) return smoothstep((t - 0.10) / 0.10);
+    if (t < 0.58) return 1;
+    if (t < 0.64) return 1 - smoothstep((t - 0.58) / 0.06);
     return 0;
   }
 
   function labelOpacity(t: number): number {
-    if (t < 0.20) return 0;
-    if (t < 0.26) return smoothstep((t - 0.20) / 0.06);
-    if (t < 0.52) return 1;
-    if (t < 0.58) return 1 - smoothstep((t - 0.52) / 0.06);
+    if (t < 0.18) return 0;
+    if (t < 0.24) return smoothstep((t - 0.18) / 0.06);
+    if (t < 0.58) return 1;
+    if (t < 0.62) return 1 - smoothstep((t - 0.58) / 0.04);
     return 0;
   }
 
