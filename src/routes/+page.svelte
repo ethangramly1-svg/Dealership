@@ -1065,4 +1065,84 @@
     letter-spacing: 0.04em;
     margin-top: 1rem;
   }
+
+  /* ─── Mobile breakpoints ─────────────────────────────────────────
+     Most layout already uses clamp() + auto-fit so it adapts. These
+     rules tighten the bits that need explicit small-screen behavior. */
+  @media (max-width: 720px) {
+    .inventory-controls {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.9rem;
+    }
+    .sort-control {
+      justify-content: space-between;
+    }
+    .chips {
+      /* Horizontal scroll on phones if categories overflow */
+      overflow-x: auto;
+      flex-wrap: nowrap;
+      padding-bottom: 0.3rem;
+      margin-bottom: -0.3rem;
+      scrollbar-width: thin;
+    }
+    .chip {
+      flex-shrink: 0;
+    }
+    .inventory-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 0.65rem;
+    }
+    .vehicle-card {
+      padding: 1rem 1rem 0.9rem;
+    }
+    .vehicle-card h3 {
+      font-size: 1rem;
+    }
+    .price {
+      font-size: 1.05rem;
+    }
+    .reviews-grid,
+    .services-grid {
+      grid-template-columns: 1fr;
+    }
+    .contact-form {
+      grid-template-columns: 1fr;
+    }
+    .form-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .submit {
+      text-align: center;
+    }
+    .privacy {
+      max-width: 100%;
+    }
+    .corridor > header,
+    .corridor > section {
+      padding: clamp(1.5rem, 6vw, 2.5rem);
+      gap: 1rem;
+    }
+  }
+
+  @media (max-width: 460px) {
+    .inventory-grid {
+      grid-template-columns: 1fr;
+    }
+    .hours-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+    }
+  }
+
+  /* Honor "reduce motion" — useful for vestibular-sensitive users */
+  @media (prefers-reduced-motion: reduce) {
+    .vehicle-card,
+    .submit,
+    .directions-cta {
+      transition: none;
+    }
+  }
 </style>

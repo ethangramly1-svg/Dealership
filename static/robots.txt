@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ethangramly1-svg.github.io/Dealership/sitemap.xml
