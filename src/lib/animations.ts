@@ -16,7 +16,9 @@ export function reveal(node: HTMLElement, options: RevealOptions = {}) {
   const { delay = 0, threshold = 0.15 } = options;
 
   if (delay > 0) {
-    node.style.transitionDelay = `${delay}ms`;
+    // CSS animation (not transition) — set animation-delay so the
+    // start-state hold + the cascade timing both work.
+    node.style.animationDelay = `${delay}ms`;
   }
 
   let revealed = false;
