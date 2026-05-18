@@ -6,6 +6,7 @@
   import { bindWindowScroll } from '$lib/scroll.svelte';
   import { labelState } from '$lib/labels.svelte';
   import { loadState } from '$lib/loadState.svelte';
+  import { reveal, spotlight } from '$lib/animations';
   import '$lib/theatre'; // side-effect: boots Theatre.js Studio panel in dev
 
   let corridorEl: HTMLElement | undefined = $state();
@@ -252,7 +253,7 @@
 <!-- Dealership content tier — solid backgrounds, fixed canvas frozen behind. -->
 <div class="dealership">
   <section class="inventory" id="inventory-anchor">
-    <header class="section-head">
+    <header class="section-head reveal" use:reveal>
       <span class="kicker">Inventory</span>
       <h2>Browse the Floor.</h2>
       <p>Refreshed daily. Eight on the lot right now — full inventory is bigger.</p>
@@ -291,8 +292,8 @@
       </div>
     {:else}
       <div class="inventory-grid">
-        {#each filteredInventory as v (v.year + v.make + v.model)}
-          <article class="vehicle-card">
+        {#each filteredInventory as v, i (v.year + v.make + v.model)}
+          <article class="vehicle-card reveal" use:reveal={{ delay: i * 60 }} use:spotlight>
             <span class="badge">
               {v.category}{#each v.tags as t}<span class="tag-sep"> · </span>{t}{/each}
             </span>
@@ -313,15 +314,15 @@
   </section>
 
   <section class="reviews">
-    <header class="section-head">
+    <header class="section-head reveal" use:reveal>
       <span class="kicker">Reviews</span>
       <h2>What Customers Say.</h2>
       <p>4.7 · 812 reviews · Las Vegas locals · Real names, real stories.</p>
     </header>
 
     <div class="reviews-grid">
-      {#each reviews as r}
-        <article class="review-card">
+      {#each reviews as r, i}
+        <article class="review-card reveal" use:reveal={{ delay: i * 100 }}>
           <div class="stars">★★★★★</div>
           <p class="quote">"{r.quote}"</p>
           <div class="byline">
@@ -334,15 +335,15 @@
   </section>
 
   <section class="services">
-    <header class="section-head">
+    <header class="section-head reveal" use:reveal>
       <span class="kicker">What we do</span>
       <h2>Beyond the keys.</h2>
       <p>Financing, trade-in, inspection, warranty. The whole transaction in one building.</p>
     </header>
 
     <div class="services-grid">
-      {#each services as s}
-        <article class="service-card">
+      {#each services as s, i}
+        <article class="service-card reveal" use:reveal={{ delay: i * 80 }}>
           <h3>{s.title}</h3>
           <p>{s.body}</p>
         </article>
@@ -351,11 +352,11 @@
   </section>
 
   <section class="hours-block">
-    <header class="section-head">
+    <header class="section-head reveal" use:reveal>
       <span class="kicker">Hours</span>
       <h2>Open every day.</h2>
     </header>
-    <div class="hours-grid">
+    <div class="hours-grid reveal" use:reveal>
       {#each hours as [day, time]}
         <div class="hours-row">
           <span class="day">{day}</span>
@@ -366,7 +367,7 @@
   </section>
 
   <section class="contact">
-    <header class="section-head">
+    <header class="section-head reveal" use:reveal>
       <span class="kicker">Get In Touch</span>
       <h2>Tell Us What You Want.</h2>
       <p>We respond within an hour during business hours. No autobots, no telemarketing — just a salesperson who knows the inventory.</p>
@@ -1108,6 +1109,84 @@
     font-size: 0.8rem;
     letter-spacing: 0.04em;
     margin-top: 1rem;
+  }
+
+  /* ─── Entrance reveal (driven by use:reveal action) ─────────────
+     Element starts faded + offset; gets .revealed when in viewport.
+     Stagger handled by inline transition-delay set from action. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+  .reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  /* ─── Cursor-follow spotlight on inventory cards ────────────────
+     `use:spotlight` writes mouse position into --mx / --my.
+     A radial gradient pseudo-element follows the cursor on hover. */
+  .vehicle-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      260px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(0, 240, 255, 0.09),
+      transparent 55%
+    );
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+  }
+  .vehicle-card:hover::before {
+    opacity: 1;
+  }
+  .vehicle-card:hover {
+    transform: translateY(-3px);
+  }
+
+  /* Sheen sweep on the primary CTA buttons. */
+  .submit,
+  .directions-cta {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .submit::after,
+  .directions-cta::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      110deg,
+      transparent 0%,
+      transparent 35%,
+      rgba(255, 255, 255, 0.25) 50%,
+      transparent 65%,
+      transparent 100%
+    );
+    transform: translateX(-110%);
+    transition: transform 0.7s ease;
+    pointer-events: none;
+    z-index: -1;
+  }
+  .submit:hover::after,
+  .directions-cta:hover::after {
+    transform: translateX(110%);
   }
 
   /* ─── Loading overlay ────────────────────────────────────────────
