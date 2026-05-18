@@ -1112,14 +1112,16 @@
   }
 
   /* ─── Entrance reveal (driven by use:reveal action) ─────────────
-     Element starts faded + offset; gets .revealed when in viewport.
-     Stagger handled by inline transition-delay set from action. */
+     Element starts at low opacity + small offset; .revealed bumps to
+     full. Starts at 0.35 not 0 so any JS failure leaves content still
+     readable. Action has a 1.5s safety timeout that forces .revealed
+     even if IntersectionObserver doesn't fire. */
   .reveal {
-    opacity: 0;
-    transform: translateY(28px);
+    opacity: 0.35;
+    transform: translateY(16px);
     transition:
-      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
     will-change: opacity, transform;
   }
   .reveal.revealed {
@@ -1137,7 +1139,8 @@
 
   /* ─── Cursor-follow spotlight on inventory cards ────────────────
      `use:spotlight` writes mouse position into --mx / --my.
-     A radial gradient pseudo-element follows the cursor on hover. */
+     A radial gradient pseudo-element follows the cursor on hover.
+     z-index: 0 keeps it behind the card content (text/badge/specs). */
   .vehicle-card::before {
     content: '';
     position: absolute;
@@ -1151,6 +1154,11 @@
     opacity: 0;
     transition: opacity 0.25s ease;
     pointer-events: none;
+    z-index: 0;
+  }
+  .vehicle-card > * {
+    position: relative;
+    z-index: 1;
   }
   .vehicle-card:hover::before {
     opacity: 1;

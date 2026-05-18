@@ -19,11 +19,23 @@ export function reveal(node: HTMLElement, options: RevealOptions = {}) {
     node.style.transitionDelay = `${delay}ms`;
   }
 
+  let revealed = false;
+  const markRevealed = () => {
+    if (revealed) return;
+    revealed = true;
+    node.classList.add('revealed');
+  };
+
+  // Safety net: if the observer doesn't fire within 1.5s (race condition with
+  // loading screen, hydration timing, browser quirks), force the reveal so
+  // content is never stuck invisible.
+  const safetyTimer = window.setTimeout(markRevealed, 1500);
+
   const observer = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
         if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
+          markRevealed();
           observer.unobserve(entry.target);
         }
       }
@@ -35,6 +47,7 @@ export function reveal(node: HTMLElement, options: RevealOptions = {}) {
   return {
     destroy() {
       observer.disconnect();
+      window.clearTimeout(safetyTimer);
     }
   };
 }
