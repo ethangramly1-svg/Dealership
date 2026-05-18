@@ -3,6 +3,7 @@
   import { GLTF } from '@threlte/extras';
   import { scrollState } from './scroll.svelte';
   import { labelState } from './labels.svelte';
+  import { loadState } from './loadState.svelte';
   import Denali from './Denali.svelte';
   import { Box3, Vector3 } from 'three';
   import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
@@ -63,6 +64,7 @@
       }
     }
     ferrariLoaded = true;
+    loadState.ferrari = true;
     const box = new Box3().setFromObject(gltf.scene);
     console.log(
       `[3d-hero] ferrari loaded ✓ — ${parts.length}/${FERRARI_PARTS.length} parts mapped`,
@@ -262,7 +264,7 @@
   <GLTF
     url="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/ToyCar/glTF-Binary/ToyCar.glb"
     {dracoLoader}
-    onload={() => { toyCarLoaded = true; console.log('[3d-hero] toycar loaded ✓'); }}
+    onload={() => { toyCarLoaded = true; loadState.toyCar = true; console.log('[3d-hero] toycar loaded ✓'); }}
     onerror={(e) => console.error('[3d-hero] toycar FAILED:', e)}
   />
 </T.Group>

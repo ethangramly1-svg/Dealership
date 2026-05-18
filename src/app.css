@@ -33,3 +33,11 @@ body {
   background: var(--neon-purple);
   color: var(--ink);
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}

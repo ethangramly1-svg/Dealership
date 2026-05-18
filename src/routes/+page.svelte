@@ -1,9 +1,11 @@
 <script lang="ts">
   import { Canvas } from '@threlte/core';
+  import { fade } from 'svelte/transition';
   import Scene from '$lib/Scene.svelte';
   import Renderer from '$lib/Renderer.svelte';
   import { bindWindowScroll } from '$lib/scroll.svelte';
   import { labelState } from '$lib/labels.svelte';
+  import { loadState } from '$lib/loadState.svelte';
   import '$lib/theatre'; // side-effect: boots Theatre.js Studio panel in dev
 
   let corridorEl: HTMLElement | undefined = $state();
@@ -117,12 +119,54 @@
   ];
 </script>
 
+<!-- Loading overlay: stays visible until Ferrari + ToyCar .glb files load.
+     Branded content makes the wait feel intentional instead of broken. -->
+{#if !loadState.ready}
+  <div class="loading-screen" out:fade={{ duration: 500 }}>
+    <div class="loading-inner">
+      <span class="loading-eyebrow">AutoNation USA · Centennial · Las Vegas</span>
+      <h1 class="loading-title">
+        The Showroom,<br />Reimagined.
+      </h1>
+      <div class="loading-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <span class="loading-status">
+        {loadState.ferrari ? '✓' : '·'} Ferrari ·
+        {loadState.toyCar ? '✓' : '·'} Compact
+      </span>
+    </div>
+  </div>
+{/if}
+
 <div class="canvas-fixed">
   <Canvas>
     <Scene />
     <Renderer />
   </Canvas>
 </div>
+
+<!-- Mobile-only sticky CTA bar. Three thumb-sized actions floating at
+     the bottom of the viewport. Hidden on desktop (>720px). -->
+<nav class="mobile-cta" aria-label="Quick actions">
+  <a href="tel:7252915110" class="mobile-cta-btn">
+    <span class="mobile-cta-icon" aria-hidden="true">☎</span>
+    <span class="mobile-cta-label">Call</span>
+  </a>
+  <a href="#inventory-anchor" class="mobile-cta-btn">
+    <span class="mobile-cta-icon" aria-hidden="true">▦</span>
+    <span class="mobile-cta-label">Inventory</span>
+  </a>
+  <a
+    href="https://maps.google.com/?q=8570+W+Centennial+Pkwy+Las+Vegas+NV+89149"
+    target="_blank"
+    rel="noopener"
+    class="mobile-cta-btn"
+  >
+    <span class="mobile-cta-icon" aria-hidden="true">→</span>
+    <span class="mobile-cta-label">Directions</span>
+  </a>
+</nav>
 
 <!-- HTML labels positioned via per-frame Vector3.project() — see Scene.svelte useTask. -->
 <div class="labels-overlay">
@@ -207,7 +251,7 @@
 
 <!-- Dealership content tier — solid backgrounds, fixed canvas frozen behind. -->
 <div class="dealership">
-  <section class="inventory">
+  <section class="inventory" id="inventory-anchor">
     <header class="section-head">
       <span class="kicker">Inventory</span>
       <h2>Browse the Floor.</h2>
@@ -1064,6 +1108,145 @@
     font-size: 0.8rem;
     letter-spacing: 0.04em;
     margin-top: 1rem;
+  }
+
+  /* ─── Loading overlay ────────────────────────────────────────────
+     Stays visible until both async-loaded .glb files resolve.
+     Branded so the wait feels intentional. */
+  .loading-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(ellipse 100% 80% at top, rgba(176, 38, 255, 0.18), transparent),
+      radial-gradient(ellipse 80% 60% at bottom, rgba(0, 240, 255, 0.10), transparent),
+      var(--bg);
+  }
+
+  .loading-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.2rem;
+    padding: clamp(2rem, 6vw, 4rem);
+    max-width: 900px;
+  }
+
+  .loading-eyebrow {
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .loading-title {
+    font-size: clamp(2.5rem, 9vw, 6.5rem);
+    font-weight: 900;
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple) 55%, var(--neon-pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .loading-dots {
+    display: flex;
+    gap: 0.55rem;
+    margin-top: 0.5rem;
+  }
+  .loading-dots span {
+    width: 0.55rem;
+    height: 0.55rem;
+    background: var(--neon-blue);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--neon-blue);
+    animation: bounce 1s ease-in-out infinite;
+  }
+  .loading-dots span:nth-child(2) {
+    animation-delay: 0.15s;
+    background: var(--neon-purple);
+    box-shadow: 0 0 12px var(--neon-purple);
+  }
+  .loading-dots span:nth-child(3) {
+    animation-delay: 0.3s;
+    background: var(--neon-pink);
+    box-shadow: 0 0 12px var(--neon-pink);
+  }
+
+  @keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+    40% { transform: translateY(-0.6rem); opacity: 1; }
+  }
+
+  .loading-status {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-top: 0.5rem;
+  }
+
+  /* ─── Mobile sticky CTA bar ──────────────────────────────────────
+     Hidden on desktop. On phones, three thumb-sized buttons fixed at
+     the bottom of the viewport: Call · Inventory · Directions. */
+  .mobile-cta {
+    display: none;
+  }
+
+  @media (max-width: 720px) {
+    .mobile-cta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      padding: 0.55rem 0.55rem calc(0.55rem + env(safe-area-inset-bottom));
+      gap: 0.45rem;
+      background: rgba(7, 7, 26, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(0, 240, 255, 0.18);
+    }
+    .mobile-cta-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.18rem;
+      padding: 0.65rem 0.4rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 0.5rem;
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .mobile-cta-btn:active {
+      background: rgba(0, 240, 255, 0.12);
+      border-color: rgba(0, 240, 255, 0.4);
+    }
+    .mobile-cta-icon {
+      font-size: 1.05rem;
+      color: var(--neon-blue);
+      line-height: 1;
+    }
+    .mobile-cta-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    /* Make sure the visit footer doesn't sit right under the CTA bar */
+    .visit {
+      padding-bottom: calc(4rem + env(safe-area-inset-bottom)) !important;
+    }
   }
 
   /* ─── Mobile breakpoints ─────────────────────────────────────────
