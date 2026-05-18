@@ -1111,31 +1111,9 @@
     margin-top: 1rem;
   }
 
-  /* ─── Entrance reveal (driven by use:reveal action) ─────────────
-     Element starts at low opacity + small offset; .revealed bumps to
-     full. Starts at 0.35 not 0 so any JS failure leaves content still
-     readable. Action has a 1.5s safety timeout that forces .revealed
-     even if IntersectionObserver doesn't fire. */
-  .reveal {
-    opacity: 0.35;
-    transform: translateY(16px);
-    transition:
-      opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: opacity, transform;
-  }
-  .reveal.revealed {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .reveal {
-      opacity: 1;
-      transform: none;
-      transition: none;
-    }
-  }
+  /* Reveal rules live in app.css (global) so Svelte's CSS scoper
+     doesn't tree-shake away the `.revealed` rule, since `.revealed`
+     is only added by JS and never appears in the template. */
 
   /* ─── Cursor-follow spotlight on inventory cards ────────────────
      `use:spotlight` writes mouse position into --mx / --my.

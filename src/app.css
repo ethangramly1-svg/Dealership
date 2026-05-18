@@ -41,3 +41,29 @@ html {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+/* ─── Entrance reveal — global so Svelte's CSS tree-shaker can't strip
+   the `.revealed` rule. The `.revealed` class is added by JS (the
+   reveal action), and Svelte's per-component CSS scoping only keeps
+   classes it sees in the template. Hoisting here keeps both ends of
+   the transition reachable. */
+.reveal {
+  opacity: 0.35;
+  transform: translateY(16px);
+  transition:
+    opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
