@@ -16,16 +16,67 @@
   // Realistic specs across the categories AutoNation Centennial actually
   // sells (Tesla, trucks, sedans, SUVs).
   // ─────────────────────────────────────────────────────────────────
-  const inventory = [
-    { year: 2023, make: 'Tesla', model: 'Model 3 Long Range', price: 36500, miles: 18200, badge: 'EV · Low Miles' },
-    { year: 2022, make: 'Honda', model: 'Civic Sport', price: 22800, miles: 31900, badge: 'Sedan' },
-    { year: 2024, make: 'Ford', model: 'F-150 XLT 4WD', price: 48900, miles: 11500, badge: 'Truck · Fresh' },
-    { year: 2023, make: 'Toyota', model: 'Camry SE', price: 26400, miles: 24100, badge: 'Sedan · Certified' },
-    { year: 2022, make: 'GMC', model: 'Yukon Denali', price: 62300, miles: 27800, badge: 'SUV · Premium' },
-    { year: 2024, make: 'Tesla', model: 'Model Y AWD', price: 42800, miles: 9200, badge: 'EV · Fresh' },
-    { year: 2023, make: 'Chevy', model: 'Silverado 1500 LT', price: 44200, miles: 17800, badge: 'Truck' },
-    { year: 2022, make: 'Mazda', model: 'CX-5 Touring', price: 28500, miles: 25700, badge: 'SUV' }
+  type Vehicle = {
+    year: number;
+    make: string;
+    model: string;
+    price: number;
+    miles: number;
+    category: 'EV' | 'Sedan' | 'Truck' | 'SUV';
+    tags: string[];
+  };
+  const inventory: Vehicle[] = [
+    { year: 2023, make: 'Tesla', model: 'Model 3 Long Range', price: 36500, miles: 18200, category: 'EV', tags: ['Low Miles'] },
+    { year: 2022, make: 'Honda', model: 'Civic Sport', price: 22800, miles: 31900, category: 'Sedan', tags: [] },
+    { year: 2024, make: 'Ford', model: 'F-150 XLT 4WD', price: 48900, miles: 11500, category: 'Truck', tags: ['Fresh'] },
+    { year: 2023, make: 'Toyota', model: 'Camry SE', price: 26400, miles: 24100, category: 'Sedan', tags: ['Certified'] },
+    { year: 2022, make: 'GMC', model: 'Yukon Denali', price: 62300, miles: 27800, category: 'SUV', tags: ['Premium'] },
+    { year: 2024, make: 'Tesla', model: 'Model Y AWD', price: 42800, miles: 9200, category: 'EV', tags: ['Fresh'] },
+    { year: 2023, make: 'Chevy', model: 'Silverado 1500 LT', price: 44200, miles: 17800, category: 'Truck', tags: [] },
+    { year: 2022, make: 'Mazda', model: 'CX-5 Touring', price: 28500, miles: 25700, category: 'SUV', tags: [] }
   ];
+
+  // ─── Inventory filter + sort state ───────────────────────────────
+  const categories = ['All', 'EV', 'Sedan', 'Truck', 'SUV'] as const;
+  type Category = (typeof categories)[number];
+  type SortKey = 'featured' | 'year' | 'price-asc' | 'price-desc' | 'miles';
+
+  let selectedCategory = $state<Category>('All');
+  let sortBy = $state<SortKey>('featured');
+
+  const filteredInventory = $derived.by(() => {
+    let list = [...inventory];
+    if (selectedCategory !== 'All') {
+      list = list.filter((v) => v.category === selectedCategory);
+    }
+    switch (sortBy) {
+      case 'year':
+        list.sort((a, b) => b.year - a.year);
+        break;
+      case 'price-asc':
+        list.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-desc':
+        list.sort((a, b) => b.price - a.price);
+        break;
+      case 'miles':
+        list.sort((a, b) => a.miles - b.miles);
+        break;
+    }
+    return list;
+  });
+
+  // ─── Contact form state ──────────────────────────────────────────
+  // Submit handler is a stub — wire to Formspree, a CRM webhook, or
+  // your own backend by replacing the body of `handleSubmit`.
+  let form = $state({ name: '', email: '', phone: '', vehicle: '', message: '' });
+  let formSubmitted = $state(false);
+
+  function handleSubmit(e: Event) {
+    e.preventDefault();
+    console.log('[3d-hero] contact form submitted:', $state.snapshot(form));
+    formSubmitted = true;
+  }
 
   const reviews = [
     {
@@ -163,23 +214,58 @@
       <p>Refreshed daily. Eight on the lot right now — full inventory is bigger.</p>
     </header>
 
-    <div class="inventory-grid">
-      {#each inventory as v}
-        <article class="vehicle-card">
-          <span class="badge">{v.badge}</span>
-          <h3>
-            <span class="yy">{v.year}</span>
-            <span class="mm">{v.make}</span>
-            <span class="md">{v.model}</span>
-          </h3>
-          <div class="specs">
-            <span class="price">${v.price.toLocaleString()}</span>
-            <span class="miles">{v.miles.toLocaleString()} mi</span>
-          </div>
-          <a class="vehicle-cta" href="tel:7252915110">Inquire →</a>
-        </article>
-      {/each}
+    <div class="inventory-controls">
+      <div class="chips" role="tablist" aria-label="Filter by category">
+        {#each categories as cat}
+          <button
+            class="chip"
+            class:active={selectedCategory === cat}
+            role="tab"
+            aria-selected={selectedCategory === cat}
+            onclick={() => (selectedCategory = cat)}
+          >
+            {cat}
+          </button>
+        {/each}
+      </div>
+      <label class="sort-control">
+        <span>Sort</span>
+        <select bind:value={sortBy}>
+          <option value="featured">Featured</option>
+          <option value="year">Year — newest</option>
+          <option value="price-asc">Price — low to high</option>
+          <option value="price-desc">Price — high to low</option>
+          <option value="miles">Mileage — low to high</option>
+        </select>
+      </label>
     </div>
+
+    {#if filteredInventory.length === 0}
+      <div class="empty-state">
+        <p>No {selectedCategory.toLowerCase()} vehicles on the floor right now.</p>
+        <button class="reset" onclick={() => (selectedCategory = 'All')}>Show all →</button>
+      </div>
+    {:else}
+      <div class="inventory-grid">
+        {#each filteredInventory as v (v.year + v.make + v.model)}
+          <article class="vehicle-card">
+            <span class="badge">
+              {v.category}{#each v.tags as t}<span class="tag-sep"> · </span>{t}{/each}
+            </span>
+            <h3>
+              <span class="yy">{v.year}</span>
+              <span class="mm">{v.make}</span>
+              <span class="md">{v.model}</span>
+            </h3>
+            <div class="specs">
+              <span class="price">${v.price.toLocaleString()}</span>
+              <span class="miles">{v.miles.toLocaleString()} mi</span>
+            </div>
+            <a class="vehicle-cta" href="tel:7252915110">Inquire →</a>
+          </article>
+        {/each}
+      </div>
+    {/if}
   </section>
 
   <section class="reviews">
@@ -233,6 +319,56 @@
         </div>
       {/each}
     </div>
+  </section>
+
+  <section class="contact">
+    <header class="section-head">
+      <span class="kicker">Get In Touch</span>
+      <h2>Tell Us What You Want.</h2>
+      <p>We respond within an hour during business hours. No autobots, no telemarketing — just a salesperson who knows the inventory.</p>
+    </header>
+
+    {#if formSubmitted}
+      <div class="form-success">
+        <span class="success-icon">✓</span>
+        <h3>Got it — we'll be in touch.</h3>
+        <p>One of the team will reach out to <strong>{form.email}</strong>{form.phone ? ` or ${form.phone}` : ''} within an hour. Talk soon.</p>
+      </div>
+    {:else}
+      <form class="contact-form" onsubmit={handleSubmit}>
+        <label class="field">
+          <span>Name</span>
+          <input type="text" bind:value={form.name} required autocomplete="name" />
+        </label>
+        <label class="field">
+          <span>Email</span>
+          <input type="email" bind:value={form.email} required autocomplete="email" />
+        </label>
+        <label class="field">
+          <span>Phone <em class="opt">(optional)</em></span>
+          <input type="tel" bind:value={form.phone} autocomplete="tel" />
+        </label>
+        <label class="field">
+          <span>Interested in</span>
+          <select bind:value={form.vehicle}>
+            <option value="">No specific vehicle yet</option>
+            {#each inventory as v}
+              <option value="{v.year} {v.make} {v.model}">
+                {v.year} {v.make} {v.model} — ${v.price.toLocaleString()}
+              </option>
+            {/each}
+          </select>
+        </label>
+        <label class="field full-width">
+          <span>Message <em class="opt">(optional)</em></span>
+          <textarea bind:value={form.message} rows="4" placeholder="Anything you want us to know before we reach out."></textarea>
+        </label>
+        <div class="form-actions full-width">
+          <button type="submit" class="submit">Send →</button>
+          <span class="privacy">We never share your info. Single salesperson contact, then radio silence unless you want more.</span>
+        </div>
+      </form>
+    {/if}
   </section>
 
   <footer class="visit">
@@ -452,6 +588,104 @@
     line-height: 1.55;
   }
 
+  /* Inventory controls */
+  .inventory-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .chips {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .chip {
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 99px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s, border-color 0.15s;
+    font-family: inherit;
+  }
+
+  .chip:hover {
+    color: var(--ink);
+    border-color: rgba(0, 240, 255, 0.3);
+  }
+
+  .chip.active {
+    background: rgba(0, 240, 255, 0.12);
+    color: var(--neon-blue);
+    border-color: rgba(0, 240, 255, 0.5);
+    box-shadow: 0 0 0 1px rgba(0, 240, 255, 0.15);
+  }
+
+  .sort-control {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .sort-control select {
+    padding: 0.5rem 0.8rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.4rem;
+    color: var(--ink);
+    font-size: 0.85rem;
+    font-family: inherit;
+    text-transform: none;
+    letter-spacing: 0;
+    cursor: pointer;
+  }
+  .sort-control select:focus {
+    outline: none;
+    border-color: rgba(0, 240, 255, 0.5);
+  }
+
+  .empty-state {
+    padding: 3rem;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 0.65rem;
+  }
+  .empty-state p {
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .empty-state .reset {
+    background: transparent;
+    border: 1px solid rgba(0, 240, 255, 0.5);
+    color: var(--neon-blue);
+    padding: 0.55rem 1.1rem;
+    border-radius: 0.4rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .tag-sep {
+    opacity: 0.6;
+  }
+
   /* Inventory grid */
   .inventory-grid {
     display: grid;
@@ -637,6 +871,133 @@
     color: var(--muted);
     font-family: 'JetBrains Mono', ui-monospace, monospace;
     font-size: 0.88rem;
+  }
+
+  /* Contact form */
+  .contact-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1.1rem 1.4rem;
+    max-width: 56rem;
+  }
+  .contact-form .full-width {
+    grid-column: 1 / -1;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .field > span {
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  .field .opt {
+    font-style: normal;
+    opacity: 0.6;
+    text-transform: none;
+    letter-spacing: 0;
+    font-family: inherit;
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    padding: 0.85rem 1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.45rem;
+    color: var(--ink);
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .field textarea {
+    resize: vertical;
+    font-family: inherit;
+    line-height: 1.5;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: rgba(0, 240, 255, 0.55);
+    background: rgba(0, 240, 255, 0.04);
+  }
+
+  .form-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+
+  .submit {
+    padding: 0.95rem 1.6rem;
+    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+    color: var(--bg);
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 800;
+    font-size: 0.95rem;
+    font-family: inherit;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: transform 0.12s, box-shadow 0.12s;
+  }
+  .submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(0, 240, 255, 0.2);
+  }
+
+  .privacy {
+    color: var(--muted);
+    font-size: 0.78rem;
+    max-width: 32ch;
+    line-height: 1.45;
+  }
+
+  .form-success {
+    padding: 2.5rem;
+    background: rgba(0, 240, 255, 0.05);
+    border: 1px solid rgba(0, 240, 255, 0.35);
+    border-radius: 0.65rem;
+    max-width: 38rem;
+  }
+  .form-success .success-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    background: var(--neon-blue);
+    color: var(--bg);
+    border-radius: 50%;
+    font-weight: 900;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 0 18px rgba(0, 240, 255, 0.5);
+  }
+  .form-success h3 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.012em;
+  }
+  .form-success p {
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .form-success strong {
+    color: var(--ink);
+    font-weight: 600;
   }
 
   /* Visit footer */
