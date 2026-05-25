@@ -512,9 +512,10 @@
   .corridor > section {
     position: relative;
     z-index: 1;
-    /* 130vh per section → 30% more scroll-budget for the 3D camera
-       flythrough, making each scroll input move the scene less. */
-    min-height: 130vh;
+    /* 170vh per section → 70% more scroll-budget for the 3D camera
+       flythrough than the original 100vh. Each scroll input now
+       moves the 3D scene roughly 40% as much as it used to. */
+    min-height: 170vh;
     padding: clamp(2rem, 6vw, 6rem);
     display: flex;
     flex-direction: column;
