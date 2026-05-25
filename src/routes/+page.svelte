@@ -512,10 +512,11 @@
   .corridor > section {
     position: relative;
     z-index: 1;
-    /* 170vh per section → 70% more scroll-budget for the 3D camera
-       flythrough than the original 100vh. Each scroll input now
-       moves the 3D scene roughly 40% as much as it used to. */
-    min-height: 170vh;
+    /* 280vh per section → ~3000vh of total scroll for the corridor.
+       Each scroll-wheel tick now moves the 3D scene ~36% as much as
+       it did at the original 100vh sizing. Premium scroll-narrative
+       sites (Polestar, Lucid, Apple) routinely run in this range. */
+    min-height: 280vh;
     padding: clamp(2rem, 6vw, 6rem);
     display: flex;
     flex-direction: column;
