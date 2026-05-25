@@ -512,7 +512,9 @@
   .corridor > section {
     position: relative;
     z-index: 1;
-    min-height: 100vh;
+    /* 130vh per section → 30% more scroll-budget for the 3D camera
+       flythrough, making each scroll input move the scene less. */
+    min-height: 130vh;
     padding: clamp(2rem, 6vw, 6rem);
     display: flex;
     flex-direction: column;
@@ -539,14 +541,18 @@
   }
 
   .corridor h1 {
-    font-size: clamp(2.75rem, 10vw, 8rem);
+    /* Lower max + slightly looser line-height keep "Reimagined" from
+       clipping the 'g' descender at large sizes, and prevent the
+       second line from outrunning the container width on big screens. */
+    font-size: clamp(2.5rem, 8vw, 6.5rem);
     font-weight: 900;
-    line-height: 0.92;
+    line-height: 1.0;
     background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple) 55%, var(--neon-pink));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    letter-spacing: -0.035em;
+    letter-spacing: -0.03em;
+    padding-bottom: 0.08em;
   }
 
   .corridor h2 {
@@ -1208,14 +1214,15 @@
   }
 
   .loading-title {
-    font-size: clamp(2.5rem, 9vw, 6.5rem);
+    font-size: clamp(2.25rem, 7.5vw, 5.5rem);
     font-weight: 900;
-    line-height: 0.92;
-    letter-spacing: -0.035em;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
     background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple) 55%, var(--neon-pink));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    padding-bottom: 0.08em;
   }
 
   .loading-dots {

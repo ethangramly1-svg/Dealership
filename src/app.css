@@ -55,7 +55,7 @@ html {
 @keyframes reveal-in {
   from {
     opacity: 0;
-    transform: translateY(28px);
+    transform: translateY(44px);
   }
   to {
     opacity: 1;
@@ -66,37 +66,37 @@ html {
 /* Single-element reveal */
 .reveal {
   opacity: 0;
-  transform: translateY(28px);
+  transform: translateY(44px);
 }
 .reveal.revealed {
-  animation: reveal-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: reveal-in 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Parent-driven stagger: children start at 0, animate when parent .revealed */
 .reveal-stagger > * {
   opacity: 0;
-  transform: translateY(24px);
+  transform: translateY(40px);
 }
 .reveal-stagger.revealed > * {
-  animation: reveal-in 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: reveal-in 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Per-child stagger delays. 90ms gap reads as clear cascade without
-   making the last item feel forgotten. Tail clamp keeps things sane
-   for grids with >12 items (the inventory case maxes at 8). */
+/* Per-child stagger delays. 120ms gap makes the cascade clearly
+   readable as a sequence, not a near-simultaneous pop. Tail clamp
+   handles >12 items (inventory maxes at 8 currently). */
 .reveal-stagger.revealed > *:nth-child(1)  { animation-delay: 0ms; }
-.reveal-stagger.revealed > *:nth-child(2)  { animation-delay: 90ms; }
-.reveal-stagger.revealed > *:nth-child(3)  { animation-delay: 180ms; }
-.reveal-stagger.revealed > *:nth-child(4)  { animation-delay: 270ms; }
-.reveal-stagger.revealed > *:nth-child(5)  { animation-delay: 360ms; }
-.reveal-stagger.revealed > *:nth-child(6)  { animation-delay: 450ms; }
-.reveal-stagger.revealed > *:nth-child(7)  { animation-delay: 540ms; }
-.reveal-stagger.revealed > *:nth-child(8)  { animation-delay: 630ms; }
-.reveal-stagger.revealed > *:nth-child(9)  { animation-delay: 720ms; }
-.reveal-stagger.revealed > *:nth-child(10) { animation-delay: 810ms; }
-.reveal-stagger.revealed > *:nth-child(11) { animation-delay: 900ms; }
-.reveal-stagger.revealed > *:nth-child(12) { animation-delay: 990ms; }
-.reveal-stagger.revealed > *:nth-child(n+13) { animation-delay: 1080ms; }
+.reveal-stagger.revealed > *:nth-child(2)  { animation-delay: 120ms; }
+.reveal-stagger.revealed > *:nth-child(3)  { animation-delay: 240ms; }
+.reveal-stagger.revealed > *:nth-child(4)  { animation-delay: 360ms; }
+.reveal-stagger.revealed > *:nth-child(5)  { animation-delay: 480ms; }
+.reveal-stagger.revealed > *:nth-child(6)  { animation-delay: 600ms; }
+.reveal-stagger.revealed > *:nth-child(7)  { animation-delay: 720ms; }
+.reveal-stagger.revealed > *:nth-child(8)  { animation-delay: 840ms; }
+.reveal-stagger.revealed > *:nth-child(9)  { animation-delay: 960ms; }
+.reveal-stagger.revealed > *:nth-child(10) { animation-delay: 1080ms; }
+.reveal-stagger.revealed > *:nth-child(11) { animation-delay: 1200ms; }
+.reveal-stagger.revealed > *:nth-child(12) { animation-delay: 1320ms; }
+.reveal-stagger.revealed > *:nth-child(n+13) { animation-delay: 1440ms; }
 
 @media (prefers-reduced-motion: reduce) {
   .reveal,
