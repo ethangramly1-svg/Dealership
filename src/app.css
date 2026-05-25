@@ -43,13 +43,19 @@ html {
 }
 
 /* ─── Entrance reveal (CSS animation, not transition) ────────────
-   Using @keyframes + animation-fill-mode: forwards so the timing
-   layer doesn't fight component-level `transition` declarations.
-   Globally scoped so Svelte's CSS tree-shaker can't drop `.revealed`. */
+   Two patterns:
+   .reveal              → the element itself animates in.
+   .reveal-stagger      → the element's direct children stagger in
+                          via nth-child animation-delays. One observer
+                          on the parent drives the whole cascade so
+                          the order is deterministic.
+
+   Both globally scoped so Svelte's CSS tree-shaker can't drop
+   `.revealed` (which is only added by JS). */
 @keyframes reveal-in {
   from {
     opacity: 0;
-    transform: translateY(32px);
+    transform: translateY(28px);
   }
   to {
     opacity: 1;
@@ -57,18 +63,46 @@ html {
   }
 }
 
+/* Single-element reveal */
 .reveal {
   opacity: 0;
-  transform: translateY(32px);
+  transform: translateY(28px);
 }
-
 .reveal.revealed {
   animation: reveal-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Parent-driven stagger: children start at 0, animate when parent .revealed */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(24px);
+}
+.reveal-stagger.revealed > * {
+  animation: reveal-in 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Per-child stagger delays. 90ms gap reads as clear cascade without
+   making the last item feel forgotten. Tail clamp keeps things sane
+   for grids with >12 items (the inventory case maxes at 8). */
+.reveal-stagger.revealed > *:nth-child(1)  { animation-delay: 0ms; }
+.reveal-stagger.revealed > *:nth-child(2)  { animation-delay: 90ms; }
+.reveal-stagger.revealed > *:nth-child(3)  { animation-delay: 180ms; }
+.reveal-stagger.revealed > *:nth-child(4)  { animation-delay: 270ms; }
+.reveal-stagger.revealed > *:nth-child(5)  { animation-delay: 360ms; }
+.reveal-stagger.revealed > *:nth-child(6)  { animation-delay: 450ms; }
+.reveal-stagger.revealed > *:nth-child(7)  { animation-delay: 540ms; }
+.reveal-stagger.revealed > *:nth-child(8)  { animation-delay: 630ms; }
+.reveal-stagger.revealed > *:nth-child(9)  { animation-delay: 720ms; }
+.reveal-stagger.revealed > *:nth-child(10) { animation-delay: 810ms; }
+.reveal-stagger.revealed > *:nth-child(11) { animation-delay: 900ms; }
+.reveal-stagger.revealed > *:nth-child(12) { animation-delay: 990ms; }
+.reveal-stagger.revealed > *:nth-child(n+13) { animation-delay: 1080ms; }
+
 @media (prefers-reduced-motion: reduce) {
   .reveal,
-  .reveal.revealed {
+  .reveal.revealed,
+  .reveal-stagger > *,
+  .reveal-stagger.revealed > * {
     opacity: 1 !important;
     transform: none !important;
     animation: none !important;

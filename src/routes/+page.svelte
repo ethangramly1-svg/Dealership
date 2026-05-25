@@ -187,7 +187,7 @@
 <!-- The corridor: 3D-driven sections. Scroll progress is computed
      against this element so it clamps when the user scrolls past. -->
 <div class="corridor" bind:this={corridorEl}>
-  <header>
+  <header class="reveal-stagger" use:reveal>
     <span class="eyebrow">AutoNation USA · Centennial · Las Vegas</span>
     <h1>The Showroom,<br />Reimagined.</h1>
     <p>Scroll through the corridor. Each car is a moment. The pressure is none.</p>
@@ -198,7 +198,7 @@
     </div>
   </header>
 
-  <section>
+  <section class="reveal-stagger" use:reveal>
     <span class="num">01</span>
     <h2>Cyan ignition.</h2>
     <p>
@@ -208,7 +208,7 @@
     </p>
   </section>
 
-  <section>
+  <section class="reveal-stagger" use:reveal>
     <span class="num">02</span>
     <h2>Anatomy.</h2>
     <p>
@@ -218,7 +218,7 @@
     </p>
   </section>
 
-  <section>
+  <section class="reveal-stagger" use:reveal>
     <span class="num">03</span>
     <h2>Magenta arc.</h2>
     <p>
@@ -228,7 +228,7 @@
     </p>
   </section>
 
-  <section>
+  <section class="reveal-stagger" use:reveal>
     <span class="num">04</span>
     <h2>The compact.</h2>
     <p>
@@ -238,7 +238,7 @@
     </p>
   </section>
 
-  <section>
+  <section class="reveal-stagger" use:reveal>
     <span class="num">05</span>
     <h2>The Denali.</h2>
     <p>
@@ -253,7 +253,7 @@
 <!-- Dealership content tier — solid backgrounds, fixed canvas frozen behind. -->
 <div class="dealership">
   <section class="inventory" id="inventory-anchor">
-    <header class="section-head reveal" use:reveal>
+    <header class="section-head reveal-stagger" use:reveal>
       <span class="kicker">Inventory</span>
       <h2>Browse the Floor.</h2>
       <p>Refreshed daily. Eight on the lot right now — full inventory is bigger.</p>
@@ -291,9 +291,9 @@
         <button class="reset" onclick={() => (selectedCategory = 'All')}>Show all →</button>
       </div>
     {:else}
-      <div class="inventory-grid">
+      <div class="inventory-grid reveal-stagger" use:reveal>
         {#each filteredInventory as v, i (v.year + v.make + v.model)}
-          <article class="vehicle-card reveal" use:reveal={{ delay: i * 60 }} use:spotlight>
+          <article class="vehicle-card" use:spotlight>
             <span class="badge">
               {v.category}{#each v.tags as t}<span class="tag-sep"> · </span>{t}{/each}
             </span>
@@ -314,15 +314,15 @@
   </section>
 
   <section class="reviews">
-    <header class="section-head reveal" use:reveal>
+    <header class="section-head reveal-stagger" use:reveal>
       <span class="kicker">Reviews</span>
       <h2>What Customers Say.</h2>
       <p>4.7 · 812 reviews · Las Vegas locals · Real names, real stories.</p>
     </header>
 
-    <div class="reviews-grid">
+    <div class="reviews-grid reveal-stagger" use:reveal>
       {#each reviews as r, i}
-        <article class="review-card reveal" use:reveal={{ delay: i * 100 }}>
+        <article class="review-card">
           <div class="stars">★★★★★</div>
           <p class="quote">"{r.quote}"</p>
           <div class="byline">
@@ -335,15 +335,15 @@
   </section>
 
   <section class="services">
-    <header class="section-head reveal" use:reveal>
+    <header class="section-head reveal-stagger" use:reveal>
       <span class="kicker">What we do</span>
       <h2>Beyond the keys.</h2>
       <p>Financing, trade-in, inspection, warranty. The whole transaction in one building.</p>
     </header>
 
-    <div class="services-grid">
+    <div class="services-grid reveal-stagger" use:reveal>
       {#each services as s, i}
-        <article class="service-card reveal" use:reveal={{ delay: i * 80 }}>
+        <article class="service-card">
           <h3>{s.title}</h3>
           <p>{s.body}</p>
         </article>
@@ -352,11 +352,11 @@
   </section>
 
   <section class="hours-block">
-    <header class="section-head reveal" use:reveal>
+    <header class="section-head reveal-stagger" use:reveal>
       <span class="kicker">Hours</span>
       <h2>Open every day.</h2>
     </header>
-    <div class="hours-grid reveal" use:reveal>
+    <div class="hours-grid reveal-stagger" use:reveal>
       {#each hours as [day, time]}
         <div class="hours-row">
           <span class="day">{day}</span>
@@ -367,7 +367,7 @@
   </section>
 
   <section class="contact">
-    <header class="section-head reveal" use:reveal>
+    <header class="section-head reveal-stagger" use:reveal>
       <span class="kicker">Get In Touch</span>
       <h2>Tell Us What You Want.</h2>
       <p>We respond within an hour during business hours. No autobots, no telemarketing — just a salesperson who knows the inventory.</p>
@@ -380,7 +380,7 @@
         <p>One of the team will reach out to <strong>{form.email}</strong>{form.phone ? ` or ${form.phone}` : ''} within an hour. Talk soon.</p>
       </div>
     {:else}
-      <form class="contact-form" onsubmit={handleSubmit}>
+      <form class="contact-form reveal-stagger" onsubmit={handleSubmit} use:reveal>
         <label class="field">
           <span>Name</span>
           <input type="text" bind:value={form.name} required autocomplete="name" />
@@ -416,7 +416,7 @@
     {/if}
   </section>
 
-  <footer class="visit">
+  <footer class="visit reveal-stagger" use:reveal>
     <span class="kicker">Visit</span>
     <h2>8570 W Centennial Pkwy<br />Las Vegas, NV 89149</h2>
     <p class="contact">
