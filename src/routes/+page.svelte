@@ -517,10 +517,14 @@
        it did at the original 100vh sizing. Premium scroll-narrative
        sites (Polestar, Lucid, Apple) routinely run in this range. */
     min-height: 280vh;
-    padding: clamp(2rem, 6vw, 6rem);
+    /* Top-anchored content + ~12vh top padding so the FIRST section's
+       text is visible inside the initial viewport on page load.
+       (With justify-content: center, the centered text on a 280vh
+       section landed at world-Y 140vh — well below the fold.) */
+    padding: clamp(5rem, 12vh, 10rem) clamp(2rem, 6vw, 6rem) clamp(2rem, 6vw, 6rem);
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: flex-start;
     gap: 1.25rem;
     max-width: 1100px;
@@ -1378,7 +1382,8 @@
     }
     .corridor > header,
     .corridor > section {
-      padding: clamp(1.5rem, 6vw, 2.5rem);
+      /* Same top-anchored treatment as desktop, just tighter spacing. */
+      padding: clamp(4rem, 10vh, 6rem) clamp(1.5rem, 6vw, 2.5rem) clamp(1.5rem, 6vw, 2.5rem);
       gap: 1rem;
     }
   }
