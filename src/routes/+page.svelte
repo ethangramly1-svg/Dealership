@@ -512,19 +512,12 @@
   .corridor > section {
     position: relative;
     z-index: 1;
-    /* 280vh per section → ~3000vh of total scroll for the corridor.
-       Each scroll-wheel tick now moves the 3D scene ~36% as much as
-       it did at the original 100vh sizing. Premium scroll-narrative
-       sites (Polestar, Lucid, Apple) routinely run in this range. */
-    min-height: 280vh;
-    /* Top-anchored content + ~12vh top padding so the FIRST section's
-       text is visible inside the initial viewport on page load.
-       (With justify-content: center, the centered text on a 280vh
-       section landed at world-Y 140vh — well below the fold.) */
-    padding: clamp(5rem, 12vh, 10rem) clamp(2rem, 6vw, 6rem) clamp(2rem, 6vw, 6rem);
+    /* 100vh per section — one viewport of attention per scene. */
+    min-height: 100vh;
+    padding: clamp(2rem, 6vw, 6rem);
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: flex-start;
     gap: 1.25rem;
     max-width: 1100px;
@@ -1382,8 +1375,7 @@
     }
     .corridor > header,
     .corridor > section {
-      /* Same top-anchored treatment as desktop, just tighter spacing. */
-      padding: clamp(4rem, 10vh, 6rem) clamp(1.5rem, 6vw, 2.5rem) clamp(1.5rem, 6vw, 2.5rem);
+      padding: clamp(1.5rem, 6vw, 2.5rem);
       gap: 1rem;
     }
   }
