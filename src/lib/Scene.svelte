@@ -54,6 +54,8 @@
   const _scratchBox = new Box3();
   const _scratchVec = new Vector3();
   const _scratchQuat = new Quaternion();
+  const _partWorldXZ = new Vector3();
+  const _camWorldXZ = new Vector3();
 
   let parts: Part[] = [];
   let ferrariRoot: Object3D | null = null;
@@ -221,6 +223,11 @@
     // BEFORE that, so force an update.
     if (ferrariRoot) ferrariRoot.updateMatrixWorld(true);
 
+    // Camera's XZ position (relative to car at origin) — for occlusion math.
+    $camera.getWorldPosition(_camWorldXZ);
+    _camWorldXZ.y = 0;
+    if (_camWorldXZ.lengthSq() > 0.001) _camWorldXZ.normalize();
+
     labelState.items = parts.map((part) => {
       // World position of the mesh, plus the cached local-to-center
       // offset rotated into world space. This anchors the label on
@@ -228,6 +235,23 @@
       part.mesh.getWorldPosition(projection);
       _scratchVec.copy(part.centerOffset).applyQuaternion(part.mesh.getWorldQuaternion(_scratchQuat));
       projection.add(_scratchVec);
+
+      // Occlusion check (wheels only): is this part on the far side of
+      // the car from the camera? If so, the body is between them and the
+      // label would float over the wrong area of the silhouette.
+      let occluded = false;
+      if (part.mesh.name.startsWith('rim_')) {
+        _partWorldXZ.copy(projection);
+        _partWorldXZ.y = 0;
+        if (_partWorldXZ.lengthSq() > 0.001) {
+          _partWorldXZ.normalize();
+          // dot < threshold → part is on far side from camera. -0.15
+          // gives a small "side-on" buffer so labels for wheels exactly
+          // perpendicular to the view (90°) still show.
+          if (_partWorldXZ.dot(_camWorldXZ) < -0.15) occluded = true;
+        }
+      }
+
       projection.project($camera);
       const inFront = projection.z < 1;
       return {
@@ -236,7 +260,7 @@
         detail: part.detail,
         x: (projection.x * 0.5 + 0.5) * $size.width,
         y: (-projection.y * 0.5 + 0.5) * $size.height,
-        visible: inFront && op > 0.05,
+        visible: inFront && op > 0.05 && !occluded,
         opacity: op
       };
     });
