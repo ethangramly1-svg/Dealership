@@ -5,7 +5,7 @@
   import { labelState } from './labels.svelte';
   import { loadState } from './loadState.svelte';
   import Denali from './Denali.svelte';
-  import { Box3, Vector3 } from 'three';
+  import { Box3, Quaternion, Vector3 } from 'three';
   import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
   import type { PerspectiveCamera, Object3D } from 'three';
 
@@ -41,21 +41,48 @@
     mesh: Object3D;
     restPos: Vector3;
     offset: Vector3;
+    /** Offset from the mesh's local origin to its bounding-box center, in
+        local space. Computed once on load by walking the mesh's geometry.
+        Lets us project the *visual* center of the part instead of its
+        origin (which can be the car's center for some modelers' rigs). */
+    centerOffset: Vector3;
     title: string;
     detail: string;
   };
 
+  // Reusable scratch — never allocated per frame.
+  const _scratchBox = new Box3();
+  const _scratchVec = new Vector3();
+  const _scratchQuat = new Quaternion();
+
   let parts: Part[] = [];
+  let ferrariRoot: Object3D | null = null;
 
   function captureFerrariParts(gltf: { scene: Object3D }) {
     parts = [];
+    ferrariRoot = gltf.scene;
+
+    // Ensure world matrices are accurate before computing per-part bboxes.
+    gltf.scene.updateMatrixWorld(true);
+
     for (const p of FERRARI_PARTS) {
       const m = gltf.scene.getObjectByName(p.name);
       if (m) {
+        // World-space bbox center, transformed into the mesh's local frame
+        // so we can re-add it each frame after the mesh's position changes.
+        _scratchBox.setFromObject(m);
+        _scratchBox.getCenter(_scratchVec);
+        // _scratchVec is in world space — convert to mesh local by
+        // subtracting the mesh's world position. Both are at rest here.
+        const worldPos = new Vector3();
+        m.getWorldPosition(worldPos);
+        const centerOffset = _scratchVec.clone().sub(worldPos);
+
         parts.push({
           mesh: m,
           restPos: m.position.clone(),
           offset: p.offset,
+          centerOffset,
           title: p.title,
           detail: p.detail
         });
@@ -68,7 +95,10 @@
     const box = new Box3().setFromObject(gltf.scene);
     console.log(
       `[3d-hero] ferrari loaded ✓ — ${parts.length}/${FERRARI_PARTS.length} parts mapped`,
-      { box: { min: box.min.toArray(), max: box.max.toArray() } }
+      {
+        box: { min: box.min.toArray(), max: box.max.toArray() },
+        parts: parts.map((p) => ({ name: p.title, centerOffset: p.centerOffset.toArray() }))
+      }
     );
   }
 
@@ -186,8 +216,18 @@
       return;
     }
 
+    // World matrices are stale after mutating positions above — Three.js
+    // only auto-updates them during the render pass, but we're reading
+    // BEFORE that, so force an update.
+    if (ferrariRoot) ferrariRoot.updateMatrixWorld(true);
+
     labelState.items = parts.map((part) => {
+      // World position of the mesh, plus the cached local-to-center
+      // offset rotated into world space. This anchors the label on
+      // the visual center of the part, not its modeling origin.
       part.mesh.getWorldPosition(projection);
+      _scratchVec.copy(part.centerOffset).applyQuaternion(part.mesh.getWorldQuaternion(_scratchQuat));
+      projection.add(_scratchVec);
       projection.project($camera);
       const inFront = projection.z < 1;
       return {
