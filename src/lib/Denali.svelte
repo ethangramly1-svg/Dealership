@@ -72,24 +72,24 @@
   <T.MeshStandardMaterial color="#222228" roughness={0.4} metalness={0.7} />
 </T.Mesh>
 
-<!-- Headlights — cyan emissive for the neon theme -->
+<!-- Headlights — warm white tungsten emissive (no neon). -->
 <T.Mesh position={[0.75, 0.72, 2.41]}>
   <T.BoxGeometry args={[0.3, 0.16, 0.07]} />
-  <T.MeshStandardMaterial color="#ffffff" emissive="#00f0ff" emissiveIntensity={3.5} />
+  <T.MeshStandardMaterial color="#ffffff" emissive="#f3e0c0" emissiveIntensity={3.2} />
 </T.Mesh>
 <T.Mesh position={[-0.75, 0.72, 2.41]}>
   <T.BoxGeometry args={[0.3, 0.16, 0.07]} />
-  <T.MeshStandardMaterial color="#ffffff" emissive="#00f0ff" emissiveIntensity={3.5} />
+  <T.MeshStandardMaterial color="#ffffff" emissive="#f3e0c0" emissiveIntensity={3.2} />
 </T.Mesh>
 
-<!-- Taillights — pink emissive -->
+<!-- Taillights — warm amber red, like real brake lights. -->
 <T.Mesh position={[0.75, 0.72, -2.41]}>
   <T.BoxGeometry args={[0.28, 0.14, 0.06]} />
-  <T.MeshStandardMaterial color="#ffffff" emissive="#ff006e" emissiveIntensity={2.5} />
+  <T.MeshStandardMaterial color="#ffffff" emissive="#c46e5e" emissiveIntensity={2.3} />
 </T.Mesh>
 <T.Mesh position={[-0.75, 0.72, -2.41]}>
   <T.BoxGeometry args={[0.28, 0.14, 0.06]} />
-  <T.MeshStandardMaterial color="#ffffff" emissive="#ff006e" emissiveIntensity={2.5} />
+  <T.MeshStandardMaterial color="#ffffff" emissive="#c46e5e" emissiveIntensity={2.3} />
 </T.Mesh>
 
 <!-- 4 wheels (tires, rotated so cylinder axis runs along X) -->

@@ -168,8 +168,11 @@
     };
   });
 
-  // ─── Mood lighting — 3 colored lights peak at each car position ──
-  // Cyan peaks near Ferrari, magenta near ToyCar, pink near Truck.
+  // ─── Mood lighting — cinematic luxury, no more neon ──────────────
+  // Three lights peak at each car position. Warm tungsten amber for
+  // the Ferrari, cool moonlight blue-gray for the ToyCar, restrained
+  // champagne for the Denali. Same intensity envelope as the old
+  // neon palette — only the colors changed.
   // ─────────────────────────────────────────────────────────────────
   const tent = (t: number, peak: number, width: number = 0.45) =>
     Math.max(0, 1 - Math.abs(t - peak) / width);
@@ -177,10 +180,10 @@
   let mood = $derived.by(() => {
     const t = scrollState.progress;
     return {
-      cyan: tent(t, 0.0) * 2.2,
-      magenta: tent(t, 0.7) * 2.4,
-      pink: tent(t, 1.0) * 2.4,
-      fogDensity: lerp(0.018, 0.075, t * t)
+      warm: tent(t, 0.0) * 2.0,       // amber tungsten — Ferrari
+      cool: tent(t, 0.7) * 2.0,       // moonlight cool — ToyCar
+      champagne: tent(t, 1.0) * 2.0,  // restrained gold — Denali
+      fogDensity: lerp(0.022, 0.068, t * t)
     };
   });
 
@@ -243,48 +246,54 @@
   });
 </script>
 
-<T.FogExp2 args={['#07071a', mood.fogDensity]} attach="fog" />
+<T.FogExp2 args={['#0e0e10', mood.fogDensity]} attach="fog" />
 
 <T.PerspectiveCamera bind:ref={cameraRef} makeDefault fov={42} near={0.1} far={160} />
 
-<T.AmbientLight intensity={0.35} color="#3a3a6a" />
+<!-- Neutral warm ambient — like a dim showroom void with soft fill. -->
+<T.AmbientLight intensity={0.28} color="#28282c" />
 
-<T.DirectionalLight position={[cam.tx + 6, cam.ty + 8, cam.tz + 6]} intensity={mood.cyan} color="#00f0ff" />
-<T.DirectionalLight position={[cam.tx - 6, cam.ty + 5, cam.tz - 3]} intensity={mood.magenta} color="#b026ff" />
+<!-- Three mood lights, cinematographer's palette. -->
+<T.DirectionalLight position={[cam.tx + 6, cam.ty + 8, cam.tz + 6]} intensity={mood.warm} color="#e8b878" />
+<T.DirectionalLight position={[cam.tx - 6, cam.ty + 5, cam.tz - 3]} intensity={mood.cool} color="#a8b8d8" />
 <T.PointLight
   position={[cam.tx, cam.ty + 1.2, cam.tz - 4]}
-  intensity={mood.pink * 15}
-  color="#ff006e"
+  intensity={mood.champagne * 12}
+  color="#c5a572"
   distance={22}
   decay={1.5}
 />
 
+<!-- Front spotlight near the Ferrari — warm tungsten kicker, dimmer
+     than the old white version so it picks up chrome without blowing
+     out the body. -->
 <T.SpotLight
   position={[FERRARI_POS[0], FERRARI_POS[1] + 2, FERRARI_POS[2] + 6]}
   angle={0.55}
   penumbra={0.6}
-  intensity={mood.cyan * 8}
-  color="#ffffff"
+  intensity={mood.warm * 6}
+  color="#f3e0c0"
   distance={18}
   decay={1.2}
 />
 
-<!-- Floor extends down the entire corridor. -->
+<!-- Floor: anthracite, low metalness so light pools subtly. -->
 <T.Mesh position={[0, -0.01, -28]} rotation={[-Math.PI / 2, 0, 0]}>
   <T.PlaneGeometry args={[80, 130]} />
-  <T.MeshStandardMaterial color="#0a0a1f" roughness={0.4} metalness={0.6} />
+  <T.MeshStandardMaterial color="#1a1a1c" roughness={0.55} metalness={0.5} />
 </T.Mesh>
 
+<!-- Loading placeholders — quiet champagne, no longer neon. -->
 {#if !ferrariLoaded}
   <T.Mesh position={[FERRARI_POS[0], FERRARI_POS[1] + 0.5, FERRARI_POS[2]]}>
     <T.SphereGeometry args={[0.35, 24, 24]} />
-    <T.MeshStandardMaterial color="#ffffff" emissive="#00f0ff" emissiveIntensity={2} />
+    <T.MeshStandardMaterial color="#ffffff" emissive="#c5a572" emissiveIntensity={1.8} />
   </T.Mesh>
 {/if}
 {#if !toyCarLoaded}
   <T.Mesh position={[TOYCAR_POS[0], TOYCAR_POS[1] + 0.5, TOYCAR_POS[2]]}>
     <T.SphereGeometry args={[0.35, 24, 24]} />
-    <T.MeshStandardMaterial color="#ffffff" emissive="#b026ff" emissiveIntensity={2} />
+    <T.MeshStandardMaterial color="#ffffff" emissive="#c5a572" emissiveIntensity={1.8} />
   </T.Mesh>
 {/if}
 <!-- Ferrari: culled only after the camera has fully transited to the

@@ -16,15 +16,18 @@
   const composer = new EffectComposer(renderer);
 
   // ─── Tuning surface ──────────────────────────────────────────────
-  // Pushed for premium neon feel: high intensity, low threshold so
-  // the cyan emissive blooms aggressively. Raise threshold (→0.3) to
-  // make bloom more selective; drop intensity (→1.2) to dial it back.
+  // Luxury redesign: bloom is restrained. Only the brightest pixels
+  // (headlights, brake lights, spotlight kicker) glow — the body
+  // shouldn't read as "neon," just "cinematic chrome."
+  // - intensity 1.5 (was 2.6) — softer halos
+  // - threshold 0.28 (was 0.12) — selective; only emissive points
+  // - kernel MEDIUM (was LARGE) — tighter glow, less wash
   const bloom = new BloomEffect({
-    intensity: 2.6,
-    luminanceThreshold: 0.12,
-    luminanceSmoothing: 0.04,
+    intensity: 1.5,
+    luminanceThreshold: 0.28,
+    luminanceSmoothing: 0.05,
     mipmapBlur: true,
-    kernelSize: KernelSize.LARGE
+    kernelSize: KernelSize.MEDIUM
   });
   // ─────────────────────────────────────────────────────────────────
 
