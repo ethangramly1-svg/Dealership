@@ -1,4 +1,6 @@
 :root {
+  /* ─── Legacy tokens (still referenced by component CSS — migrating
+         to --lux-* progressively over the next few phases). ───────── */
   --bg: #07071a;
   --bg-2: #0f0f2c;
   --ink: #f0f0ff;
@@ -7,6 +9,34 @@
   --neon-purple: #b026ff;
   --neon-pink: #ff006e;
   --gold: #ffd700;
+
+  /* ─── New luxury palette (Direction B: Modern Luxury Auto) ─────
+         Anthracite charcoal · warm off-white · single champagne accent.
+         Components will migrate to these vars phase-by-phase. ────── */
+  --lux-bg: #0e0e10;
+  --lux-bg-2: #18181b;
+  --lux-bg-3: #232328;
+  --lux-surface: rgba(243, 237, 225, 0.03);
+  --lux-surface-2: rgba(243, 237, 225, 0.05);
+  --lux-border: rgba(243, 237, 225, 0.08);
+  --lux-border-hover: rgba(197, 165, 114, 0.4);
+
+  --lux-ink: #f3ede1;
+  --lux-ink-2: #e5dccb;
+  --lux-muted: #948b7a;
+  --lux-muted-2: #6c6557;
+
+  --lux-accent: #c5a572;
+  --lux-accent-soft: rgba(197, 165, 114, 0.18);
+  --lux-accent-line: rgba(197, 165, 114, 0.35);
+
+  /* Reserved for review quote bars only — used very sparingly. */
+  --lux-oxblood: #5a1a1f;
+
+  /* ─── Typography stack ────────────────────────────────────────── */
+  --serif: 'Libre Caslon Display', 'Big Caslon', 'Bodoni Moda', Georgia, 'Times New Roman', serif;
+  --sans: 'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  --small-caps: 'Cormorant Garamond', 'Cochin', Georgia, serif;
 }
 
 *,
@@ -19,14 +49,22 @@
 
 html,
 body {
+  /* Legacy gradient bg — kept so the current neon design renders the
+     same while we migrate components phase-by-phase. */
   background:
     radial-gradient(ellipse 100% 80% at top, rgba(176, 38, 255, 0.15), transparent),
     radial-gradient(ellipse 80% 60% at bottom, rgba(0, 240, 255, 0.08), transparent),
     var(--bg);
   color: var(--ink);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  /* Phase-1 visible change: Inter → Inter Tight (sharper, slightly
+     narrower) plus better antialiasing. */
+  font-family: var(--sans);
+  font-weight: 400;
+  letter-spacing: -0.005em;
   min-height: 100vh;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
@@ -42,16 +80,7 @@ html {
   html { scroll-behavior: auto; }
 }
 
-/* ─── Entrance reveal (CSS animation, not transition) ────────────
-   Two patterns:
-   .reveal              → the element itself animates in.
-   .reveal-stagger      → the element's direct children stagger in
-                          via nth-child animation-delays. One observer
-                          on the parent drives the whole cascade so
-                          the order is deterministic.
-
-   Both globally scoped so Svelte's CSS tree-shaker can't drop
-   `.revealed` (which is only added by JS). */
+/* ─── Entrance reveal animations (unchanged) ──────────────────────── */
 @keyframes reveal-in {
   from {
     opacity: 0;
@@ -65,7 +94,6 @@ html {
   }
 }
 
-/* Single-element reveal */
 .reveal {
   opacity: 0;
   transform: translateY(110px) scale(0.92);
@@ -76,8 +104,6 @@ html {
   animation: reveal-in 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Parent-driven stagger: children start blurred + scaled-down + offset,
-   animate when parent .revealed. */
 .reveal-stagger > * {
   opacity: 0;
   transform: translateY(100px) scale(0.93);
@@ -88,9 +114,6 @@ html {
   animation: reveal-in 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Per-child stagger delays. 220ms gap with 1.6s duration creates an
-   overlapping wave (next child starts while previous is still
-   animating). Total wall-clock for a 6-child section: ~2.7s. */
 .reveal-stagger.revealed > *:nth-child(1)  { animation-delay: 0ms; }
 .reveal-stagger.revealed > *:nth-child(2)  { animation-delay: 220ms; }
 .reveal-stagger.revealed > *:nth-child(3)  { animation-delay: 440ms; }
