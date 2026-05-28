@@ -210,7 +210,7 @@
   <header class="reveal-stagger" use:reveal>
     <span class="eyebrow">AutoNation USA · Centennial · Las Vegas</span>
     <h1>The Showroom,<br />Reimagined.</h1>
-    <p>Scroll through the corridor. Each car is a moment. The pressure is none.</p>
+    <p>A small showroom of considered vehicles. No pressure, no theatrics — just three cars at a time, treated with care.</p>
     <div class="rating">
       <span class="stars">★★★★★</span>
       <span class="rating-num">4.7</span>
@@ -219,53 +219,52 @@
   </header>
 
   <section class="reveal-stagger" use:reveal>
-    <span class="num">01</span>
-    <h2>Cyan ignition.</h2>
+    <span class="num">Nº 01</span>
+    <h2>The concept.</h2>
     <p>
-      The featured concept rolls into the cyan key light. Hard silhouette,
-      chrome body, headlight kicker straight into the frame. This is how a
-      car wants to be seen.
+      Forged carbon body, sculpted aluminum bones, hand-finished trim. The
+      featured car arrives with full presence — silhouette honest, lines
+      uninterrupted. This is the car as it was intended to be seen.
     </p>
   </section>
 
   <section class="reveal-stagger" use:reveal>
-    <span class="num">02</span>
+    <span class="num">Nº 02</span>
     <h2>Anatomy.</h2>
     <p>
-      Every bolt accounted for. Keep scrolling and the chassis blows apart —
-      rims, glass, body, all separated so you can see what's actually inside
-      a car this clean. Labels appear over each piece.
+      Every panel pulls back into the air around it. Body, glass, four
+      forged rims, each suspended in its rightful place. We tell you
+      exactly what you are buying — every bolt accounted for.
     </p>
   </section>
 
   <section class="reveal-stagger" use:reveal>
-    <span class="num">03</span>
-    <h2>Magenta arc.</h2>
+    <span class="num">Nº 03</span>
+    <h2>Restored.</h2>
     <p>
-      Parts re-assemble. The camera lifts and the corridor opens. Magenta
-      replaces cyan as the dominant key. A second silhouette is in the
-      haze ahead.
+      The panels return to their frame. The camera lifts and the corridor
+      opens. The next car is already waiting in the haze ahead — same
+      level of attention, different intent.
     </p>
   </section>
 
   <section class="reveal-stagger" use:reveal>
-    <span class="num">04</span>
+    <span class="num">Nº 04</span>
     <h2>The compact.</h2>
     <p>
-      The second slot. Smaller footprint, same level of presentation.
-      Whatever fits this slot in our actual inventory rotates through —
-      sedan, hatchback, crossover. The light wraps it the same way.
+      A smaller footprint, the same level of presentation. Whatever fits
+      this slot in our inventory rotates through — sedan, hatchback,
+      crossover. The light treats it with the same patience.
     </p>
   </section>
 
   <section class="reveal-stagger" use:reveal>
-    <span class="num">05</span>
+    <span class="num">Nº 05</span>
     <h2>The Denali.</h2>
     <p>
-      Full-size SUV silhouette. Chrome belt-line, three-bar grille, tall
-      cabin. Pink rim light wraps the body and the headlights answer in
-      cyan. This is the third slot — luxury utility, ready for the family,
-      the worksite, or the weekend.
+      Full-size utility, chrome belt-line, vertical-bar grille, tall
+      cabin. Built for the family, the worksite, the long route home.
+      The third slot in the showroom — and the deepest in the catalog.
     </p>
   </section>
 </div>
@@ -554,11 +553,15 @@
   }
 
   .num {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 0.85rem;
-    letter-spacing: 0.15em;
-    color: var(--neon-blue);
-    opacity: 0.7;
+    /* Editorial section number — small italic serif, champagne color.
+       Reads as a magazine pull-number ("Nº 01") rather than a monospace
+       code label. */
+    font-family: var(--small-caps);
+    font-style: italic;
+    font-size: 1.1rem;
+    letter-spacing: 0.04em;
+    color: var(--lux-accent);
+    font-weight: 500;
   }
 
   .corridor h1 {
@@ -574,19 +577,24 @@
   }
 
   .corridor h2 {
-    font-size: clamp(1.75rem, 5vw, 3.5rem);
-    font-weight: 700;
-    line-height: 1.04;
-    color: var(--ink);
-    letter-spacing: -0.022em;
+    font-family: var(--serif);
+    font-size: clamp(2rem, 5.5vw, 4rem);
+    font-weight: 400;
+    line-height: 1.0;
+    color: var(--lux-ink);
+    letter-spacing: -0.02em;
     max-width: 22ch;
+    padding-bottom: 0.08em;
   }
 
   .corridor p {
-    color: var(--muted);
-    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    color: var(--lux-muted);
+    font-family: var(--sans);
+    font-size: clamp(1.05rem, 1.4vw, 1.2rem);
     max-width: 52ch;
-    line-height: 1.6;
+    line-height: 1.7;
+    font-weight: 400;
+    letter-spacing: -0.003em;
   }
 
   .rating {
