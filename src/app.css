@@ -1,18 +1,5 @@
 :root {
-  /* ─── Legacy tokens (still referenced by component CSS — migrating
-         to --lux-* progressively over the next few phases). ───────── */
-  --bg: #07071a;
-  --bg-2: #0f0f2c;
-  --ink: #f0f0ff;
-  --muted: #a0a0c0;
-  --neon-blue: #00f0ff;
-  --neon-purple: #b026ff;
-  --neon-pink: #ff006e;
-  --gold: #ffd700;
-
-  /* ─── New luxury palette (Direction B: Modern Luxury Auto) ─────
-         Anthracite charcoal · warm off-white · single champagne accent.
-         Components will migrate to these vars phase-by-phase. ────── */
+  /* ─── Anthracite base ──────────────────────────────────────────── */
   --lux-bg: #0e0e10;
   --lux-bg-2: #18181b;
   --lux-bg-3: #232328;
@@ -21,16 +8,19 @@
   --lux-border: rgba(243, 237, 225, 0.08);
   --lux-border-hover: rgba(197, 165, 114, 0.4);
 
+  /* ─── Warm off-white inks ──────────────────────────────────────── */
   --lux-ink: #f3ede1;
   --lux-ink-2: #e5dccb;
   --lux-muted: #948b7a;
   --lux-muted-2: #6c6557;
 
+  /* ─── The one accent: champagne ────────────────────────────────── */
   --lux-accent: #c5a572;
   --lux-accent-soft: rgba(197, 165, 114, 0.18);
   --lux-accent-line: rgba(197, 165, 114, 0.35);
 
-  /* Reserved for review quote bars only — used very sparingly. */
+  /* ─── Reserved deep oxblood — used sparingly (review quote bar,
+         testimonial left edge). One color, one purpose. ────────── */
   --lux-oxblood: #5a1a1f;
 
   /* ─── Typography stack ────────────────────────────────────────── */
@@ -49,15 +39,8 @@
 
 html,
 body {
-  /* Legacy gradient bg — kept so the current neon design renders the
-     same while we migrate components phase-by-phase. */
-  background:
-    radial-gradient(ellipse 100% 80% at top, rgba(176, 38, 255, 0.15), transparent),
-    radial-gradient(ellipse 80% 60% at bottom, rgba(0, 240, 255, 0.08), transparent),
-    var(--bg);
-  color: var(--ink);
-  /* Phase-1 visible change: Inter → Inter Tight (sharper, slightly
-     narrower) plus better antialiasing. */
+  background: var(--lux-bg);
+  color: var(--lux-ink);
   font-family: var(--sans);
   font-weight: 400;
   letter-spacing: -0.005em;
@@ -68,8 +51,8 @@ body {
 }
 
 ::selection {
-  background: var(--neon-purple);
-  color: var(--ink);
+  background: var(--lux-accent);
+  color: var(--lux-bg);
 }
 
 html {
@@ -80,7 +63,7 @@ html {
   html { scroll-behavior: auto; }
 }
 
-/* ─── Entrance reveal animations (unchanged) ──────────────────────── */
+/* ─── Entrance reveal animations ─────────────────────────────────── */
 @keyframes reveal-in {
   from {
     opacity: 0;
