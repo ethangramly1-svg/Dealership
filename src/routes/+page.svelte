@@ -545,10 +545,12 @@
   }
 
   .eyebrow {
-    font-size: 0.78rem;
-    letter-spacing: 0.22em;
+    font-family: var(--sans);
+    font-size: 0.74rem;
+    letter-spacing: 0.28em;
     text-transform: uppercase;
-    color: var(--muted);
+    font-weight: 500;
+    color: var(--lux-accent);
   }
 
   .num {
@@ -560,17 +562,14 @@
   }
 
   .corridor h1 {
-    /* Lower max + slightly looser line-height keep "Reimagined" from
-       clipping the 'g' descender at large sizes, and prevent the
-       second line from outrunning the container width on big screens. */
-    font-size: clamp(2.5rem, 8vw, 6.5rem);
-    font-weight: 900;
+    /* Libre Caslon Display: high-contrast modern serif. Single weight
+       (regular only) — weight comes from size, not stroke. */
+    font-family: var(--serif);
+    font-size: clamp(2.75rem, 9vw, 7rem);
+    font-weight: 400;
     line-height: 1.0;
-    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple) 55%, var(--neon-pink));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    letter-spacing: -0.03em;
+    color: var(--lux-ink);
+    letter-spacing: -0.015em;
     padding-bottom: 0.08em;
   }
 
@@ -599,16 +598,21 @@
     pointer-events: auto;
   }
   .stars {
-    color: var(--gold);
-    letter-spacing: 0.05em;
-    font-size: 1.1rem;
+    color: var(--lux-accent);
+    letter-spacing: 0.06em;
+    font-size: 1.05rem;
   }
   .rating-num {
-    color: var(--ink);
-    font-weight: 700;
+    font-family: var(--serif);
+    color: var(--lux-accent);
+    font-weight: 400;
+    font-size: 1.1rem;
   }
   .rating-meta {
-    color: var(--muted);
+    color: var(--lux-muted);
+    font-style: italic;
+    font-family: var(--small-caps);
+    font-size: 1rem;
   }
 
   /* ─── Dealership content (post-corridor) ────────────────────────── */
@@ -1226,21 +1230,21 @@
   }
 
   .loading-eyebrow {
-    font-size: 0.78rem;
-    letter-spacing: 0.22em;
+    font-family: var(--sans);
+    font-size: 0.74rem;
+    letter-spacing: 0.28em;
     text-transform: uppercase;
-    color: var(--muted);
+    font-weight: 500;
+    color: var(--lux-accent);
   }
 
   .loading-title {
-    font-size: clamp(2.25rem, 7.5vw, 5.5rem);
-    font-weight: 900;
+    font-family: var(--serif);
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    font-weight: 400;
     line-height: 1.0;
-    letter-spacing: -0.03em;
-    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple) 55%, var(--neon-pink));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    letter-spacing: -0.015em;
+    color: var(--lux-ink);
     padding-bottom: 0.08em;
   }
 
@@ -1250,22 +1254,18 @@
     margin-top: 0.5rem;
   }
   .loading-dots span {
-    width: 0.55rem;
-    height: 0.55rem;
-    background: var(--neon-blue);
+    width: 0.5rem;
+    height: 0.5rem;
+    background: var(--lux-accent);
     border-radius: 50%;
-    box-shadow: 0 0 12px var(--neon-blue);
+    /* Removed neon glow — restrained champagne pulse instead. */
     animation: bounce 1s ease-in-out infinite;
   }
   .loading-dots span:nth-child(2) {
     animation-delay: 0.15s;
-    background: var(--neon-purple);
-    box-shadow: 0 0 12px var(--neon-purple);
   }
   .loading-dots span:nth-child(3) {
     animation-delay: 0.3s;
-    background: var(--neon-pink);
-    box-shadow: 0 0 12px var(--neon-pink);
   }
 
   @keyframes bounce {
