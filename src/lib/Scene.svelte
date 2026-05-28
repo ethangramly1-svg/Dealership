@@ -181,10 +181,10 @@
   let mood = $derived.by(() => {
     const t = scrollState.progress;
     return {
-      warm: tent(t, 0.0) * 2.0,       // amber tungsten — Ferrari
-      cool: tent(t, 0.7) * 2.0,       // moonlight cool — ToyCar
-      champagne: tent(t, 1.0) * 2.0,  // restrained gold — Denali
-      fogDensity: lerp(0.022, 0.068, t * t)
+      warm: tent(t, 0.0) * 2.4,       // amber tungsten — Ferrari
+      cool: tent(t, 0.7) * 2.4,       // moonlight cool — ToyCar
+      champagne: tent(t, 1.0) * 2.4,  // restrained gold — Denali
+      fogDensity: lerp(0.018, 0.05, t * t)
     };
   });
 
@@ -263,19 +263,23 @@
 
 <T.PerspectiveCamera bind:ref={cameraRef} makeDefault fov={42} near={0.1} far={160} />
 
-<!-- Neutral warm ambient — like a dim showroom void with soft fill. -->
-<T.AmbientLight intensity={0.28} color="#28282c" />
+<!-- Neutral warm ambient — bumped for dark-paint cars (Sierra is dark) so
+     PBR surfaces have a floor of light to reflect, not just mood peaks. -->
+<T.AmbientLight intensity={0.5} color="#3a3a40" />
 
 <!-- Three mood lights, cinematographer's palette. -->
 <T.DirectionalLight position={[cam.tx + 6, cam.ty + 8, cam.tz + 6]} intensity={mood.warm} color="#e8b878" />
 <T.DirectionalLight position={[cam.tx - 6, cam.ty + 5, cam.tz - 3]} intensity={mood.cool} color="#a8b8d8" />
 <T.PointLight
-  position={[cam.tx, cam.ty + 1.2, cam.tz - 4]}
-  intensity={mood.champagne * 12}
+  position={[cam.tx, cam.ty + 1.5, cam.tz - 3]}
+  intensity={mood.champagne * 18}
   color="#c5a572"
-  distance={22}
-  decay={1.5}
+  distance={30}
+  decay={1.4}
 />
+
+<!-- Soft top-down fill so dark paint reads against the floor / fog. -->
+<T.HemisphereLight intensity={0.4} color="#f3ede1" groundColor="#1a1a1c" />
 
 <!-- Front spotlight near the Ferrari — warm tungsten kicker, dimmer
      than the old white version so it picks up chrome without blowing
@@ -290,10 +294,11 @@
   decay={1.2}
 />
 
-<!-- Floor: anthracite, low metalness so light pools subtly. -->
+<!-- Floor: slightly lifted anthracite so dark vehicles separate from
+     the background. Less mirror, more matte to avoid harsh hot-spots. -->
 <T.Mesh position={[0, -0.01, -28]} rotation={[-Math.PI / 2, 0, 0]}>
   <T.PlaneGeometry args={[80, 130]} />
-  <T.MeshStandardMaterial color="#1a1a1c" roughness={0.55} metalness={0.5} />
+  <T.MeshStandardMaterial color="#2a2a2e" roughness={0.7} metalness={0.4} />
 </T.Mesh>
 
 <!-- Loading placeholders — quiet champagne, no longer neon. -->
