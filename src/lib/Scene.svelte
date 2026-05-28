@@ -5,6 +5,7 @@
   import { labelState } from './labels.svelte';
   import { loadState } from './loadState.svelte';
   import Denali from './Denali.svelte';
+  import { base } from '$app/paths';
   import { Box3, Quaternion, Vector3 } from 'three';
   import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
   import type { PerspectiveCamera, Object3D } from 'three';
@@ -196,7 +197,19 @@
 
   let ferrariLoaded = $state(false);
   let toyCarLoaded = $state(false);
-  // Denali is built from primitives — no async load, so always "ready".
+  let denaliLoaded = $state(false);
+
+  // ─── TEMP / PROTOTYPE ONLY ───────────────────────────────────────
+  // Denali GLB hosted at /denali.glb is a 2024 GMC Sierra 1500 AT4X by
+  // Ddiaz Design from Sketchfab (CC-BY-NC-SA-4.0).
+  // License is NonCommercial — DO NOT ship to a real dealership site.
+  // Swap for either:
+  //   (a) a commercial-licensed Sierra/Yukon .glb, OR
+  //   (b) the primitive <Denali /> in this same folder.
+  // Tracking: github.com/ethangramly1-svg/Dealership — pre-launch swap.
+  // ─────────────────────────────────────────────────────────────────
+  const DENALI_URL = `${base}/denali.glb`;
+  const DENALI_SCALE = 1.0; // tune after first load — bbox logged on ready
 
   const { camera, size } = useThrelte();
   const projection = new Vector3();
@@ -318,7 +331,29 @@
   />
 </T.Group>
 
-<!-- Denali-silhouette SUV built from primitives. Swap for a real .glb later. -->
-<T.Group position={TRUCK_POS}>
-  <Denali />
+<!-- Denali slot — currently the Sierra 1500 GLB (prototype only;
+     NonCommercial license, swap before real launch). Placeholder
+     sphere while it loads. -->
+{#if !denaliLoaded}
+  <T.Mesh position={[TRUCK_POS[0], TRUCK_POS[1] + 0.5, TRUCK_POS[2]]}>
+    <T.SphereGeometry args={[0.4, 24, 24]} />
+    <T.MeshStandardMaterial color="#ffffff" emissive="#c5a572" emissiveIntensity={1.8} />
+  </T.Mesh>
+{/if}
+
+<T.Group position={TRUCK_POS} scale={DENALI_SCALE}>
+  <GLTF
+    url={DENALI_URL}
+    {dracoLoader}
+    onload={(g) => {
+      denaliLoaded = true;
+      const box = new Box3().setFromObject(g.scene);
+      const size = box.getSize(new Vector3());
+      console.log('[3d-hero] denali (Sierra 1500) loaded ✓', {
+        bbox_size: size.toArray().map((n) => n.toFixed(2)),
+        attribution: 'Ddiaz Design · CC-BY-NC-SA-4.0 · sketchfab.com/3d-models/2024-gmc-sierra-1500-at4x-41d0b29e3d2f4854a9b6349ccf918a1e'
+      });
+    }}
+    onerror={(e) => console.error('[3d-hero] denali FAILED:', e)}
+  />
 </T.Group>
