@@ -488,41 +488,42 @@
   }
 
   .dot {
-    width: 0.65rem;
-    height: 0.65rem;
+    width: 0.5rem;
+    height: 0.5rem;
     border-radius: 50%;
-    background: var(--neon-blue);
-    box-shadow:
-      0 0 0 2px rgba(0, 240, 255, 0.25),
-      0 0 14px var(--neon-blue);
+    background: var(--lux-accent);
     flex-shrink: 0;
   }
 
   .card {
     display: flex;
     flex-direction: column;
-    gap: 0.18rem;
-    padding: 0.45rem 0.85rem;
-    background: rgba(7, 7, 26, 0.72);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(0, 240, 255, 0.35);
-    border-radius: 0.45rem;
-    color: var(--ink);
+    gap: 0.22rem;
+    padding: 0.55rem 0.9rem;
+    background: rgba(14, 14, 16, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--lux-accent-line);
+    border-radius: 0.3rem;
+    color: var(--lux-ink);
     min-width: 12rem;
     max-width: 22rem;
   }
 
   .t {
-    font-size: 0.82rem;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--lux-accent);
   }
 
   .d {
-    font-size: 0.76rem;
-    color: var(--muted);
+    font-family: var(--small-caps);
+    font-size: 0.92rem;
+    font-style: italic;
+    color: var(--lux-ink-2);
     line-height: 1.4;
   }
 
@@ -628,7 +629,7 @@
     position: relative;
     z-index: 1;
     background:
-      linear-gradient(180deg, rgba(7, 7, 26, 0.0) 0%, rgba(7, 7, 26, 0.94) 6%, rgba(7, 7, 26, 0.97) 100%);
+      linear-gradient(180deg, rgba(14, 14, 16, 0.0) 0%, rgba(14, 14, 16, 0.95) 6%, rgba(14, 14, 16, 0.985) 100%);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
@@ -645,29 +646,32 @@
   }
 
   .section-head .kicker {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 0.8rem;
-    letter-spacing: 0.22em;
+    font-family: var(--sans);
+    font-size: 0.74rem;
+    letter-spacing: 0.28em;
     text-transform: uppercase;
-    color: var(--neon-blue);
+    font-weight: 500;
+    color: var(--lux-accent);
     display: block;
     margin-bottom: 0.6rem;
   }
 
   .section-head h2 {
-    font-size: clamp(2rem, 5vw, 3.75rem);
-    font-weight: 800;
+    font-family: var(--serif);
+    font-size: clamp(2.25rem, 5.5vw, 4rem);
+    font-weight: 400;
     line-height: 1.0;
-    color: var(--ink);
-    letter-spacing: -0.025em;
+    color: var(--lux-ink);
+    letter-spacing: -0.02em;
     margin-bottom: 0.65rem;
+    padding-bottom: 0.06em;
   }
 
   .section-head p {
-    color: var(--muted);
-    font-size: clamp(1rem, 1.3vw, 1.1rem);
+    color: var(--lux-muted);
+    font-size: clamp(1rem, 1.3vw, 1.15rem);
     max-width: 56ch;
-    line-height: 1.55;
+    line-height: 1.6;
   }
 
   /* Inventory controls */
@@ -689,79 +693,87 @@
   }
 
   .chip {
-    padding: 0.5rem 1rem;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0.55rem 1.1rem;
+    background: transparent;
+    border: 1px solid var(--lux-border);
     border-radius: 99px;
-    color: var(--muted);
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.01em;
+    color: var(--lux-muted);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     cursor: pointer;
     transition: color 0.15s, background 0.15s, border-color 0.15s;
-    font-family: inherit;
+    font-family: var(--sans);
   }
 
   .chip:hover {
-    color: var(--ink);
-    border-color: rgba(0, 240, 255, 0.3);
+    color: var(--lux-ink);
+    border-color: var(--lux-accent-line);
   }
 
   .chip.active {
-    background: rgba(0, 240, 255, 0.12);
-    color: var(--neon-blue);
-    border-color: rgba(0, 240, 255, 0.5);
-    box-shadow: 0 0 0 1px rgba(0, 240, 255, 0.15);
+    background: var(--lux-accent-soft);
+    color: var(--lux-accent);
+    border-color: var(--lux-accent-line);
   }
 
   .sort-control {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
-    font-size: 0.85rem;
-    color: var(--muted);
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    letter-spacing: 0.05em;
+    gap: 0.7rem;
+    font-size: 0.74rem;
+    color: var(--lux-muted);
+    font-family: var(--sans);
+    font-weight: 500;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
   }
 
   .sort-control select {
-    padding: 0.5rem 0.8rem;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 0.4rem;
-    color: var(--ink);
+    padding: 0.55rem 0.85rem;
+    background: transparent;
+    border: 1px solid var(--lux-border);
+    border-radius: 0.3rem;
+    color: var(--lux-ink);
     font-size: 0.85rem;
-    font-family: inherit;
+    font-family: var(--sans);
     text-transform: none;
     letter-spacing: 0;
+    font-weight: 400;
     cursor: pointer;
   }
   .sort-control select:focus {
     outline: none;
-    border-color: rgba(0, 240, 255, 0.5);
+    border-color: var(--lux-accent-line);
   }
 
   .empty-state {
     padding: 3rem;
     text-align: center;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px dashed rgba(255, 255, 255, 0.1);
-    border-radius: 0.65rem;
+    background: var(--lux-surface);
+    border: 1px dashed var(--lux-border);
+    border-radius: 0.4rem;
   }
   .empty-state p {
-    color: var(--muted);
+    color: var(--lux-muted);
     margin-bottom: 1rem;
   }
   .empty-state .reset {
     background: transparent;
-    border: 1px solid rgba(0, 240, 255, 0.5);
-    color: var(--neon-blue);
+    border: 1px solid var(--lux-accent-line);
+    color: var(--lux-accent);
     padding: 0.55rem 1.1rem;
-    border-radius: 0.4rem;
-    font-weight: 600;
+    border-radius: 0.3rem;
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     cursor: pointer;
-    font-family: inherit;
+  }
+  .empty-state .reset:hover {
+    background: var(--lux-accent-soft);
   }
 
   .tag-sep {
@@ -779,42 +791,43 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 0.7rem;
-    padding: 1.25rem 1.25rem 1.1rem;
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 0.65rem;
-    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    gap: 0.85rem;
+    padding: 1.5rem 1.4rem 1.2rem;
+    background: var(--lux-surface);
+    border: 1px solid var(--lux-border);
+    border-radius: 0.45rem;
+    transition: border-color 0.25s, transform 0.25s, background 0.25s;
   }
 
   .vehicle-card:hover {
-    border-color: rgba(0, 240, 255, 0.4);
-    box-shadow: 0 0 0 1px rgba(0, 240, 255, 0.2), 0 12px 30px rgba(0, 240, 255, 0.08);
-    transform: translateY(-2px);
+    border-color: var(--lux-accent-line);
+    background: var(--lux-surface-2);
+    transform: translateY(-3px);
   }
 
   .vehicle-card .badge {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 0.68rem;
-    letter-spacing: 0.12em;
+    font-family: var(--sans);
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--neon-blue);
-    padding: 0.2rem 0.5rem;
-    background: rgba(0, 240, 255, 0.06);
-    border-radius: 0.25rem;
+    font-weight: 500;
+    color: var(--lux-accent);
     align-self: flex-start;
   }
 
   .vehicle-card h3 {
-    font-size: 1.15rem;
-    line-height: 1.25;
-    color: var(--ink);
-    font-weight: 700;
-    letter-spacing: -0.01em;
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    line-height: 1.15;
+    color: var(--lux-ink);
+    font-weight: 400;
+    letter-spacing: -0.005em;
   }
   .vehicle-card h3 .yy {
-    color: var(--muted);
-    font-weight: 400;
+    color: var(--lux-muted);
+    font-style: italic;
+    font-family: var(--small-caps);
+    font-size: 0.85em;
     margin-right: 0.4em;
   }
   .vehicle-card h3 .mm {
@@ -822,7 +835,7 @@
   }
   .vehicle-card h3 .md {
     display: block;
-    color: var(--ink);
+    color: var(--lux-ink);
   }
 
   .specs {
@@ -830,32 +843,36 @@
     justify-content: space-between;
     align-items: baseline;
     gap: 1rem;
-    padding-top: 0.7rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--lux-border);
   }
   .price {
-    font-size: 1.2rem;
-    font-weight: 800;
-    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--lux-accent);
     letter-spacing: -0.01em;
   }
   .miles {
-    font-size: 0.8rem;
-    color: var(--muted);
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.82rem;
+    color: var(--lux-muted);
+    font-family: var(--small-caps);
+    font-style: italic;
   }
 
   .vehicle-cta {
     align-self: flex-start;
     margin-top: 0.2rem;
-    font-size: 0.85rem;
-    color: var(--neon-blue);
+    font-size: 0.75rem;
+    color: var(--lux-accent);
     text-decoration: none;
-    font-weight: 600;
-    letter-spacing: 0.02em;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-family: var(--sans);
   }
   .vehicle-cta:hover {
-    color: var(--neon-purple);
+    color: var(--lux-ink);
   }
 
   /* Reviews grid */
@@ -866,41 +883,47 @@
   }
 
   .review-card {
-    padding: 1.5rem;
-    background: rgba(176, 38, 255, 0.04);
-    border: 1px solid rgba(176, 38, 255, 0.18);
-    border-radius: 0.65rem;
+    padding: 1.75rem 1.6rem 1.5rem;
+    background: var(--lux-surface);
+    border: 1px solid var(--lux-border);
+    border-left: 2px solid var(--lux-oxblood);
+    border-radius: 0 0.45rem 0.45rem 0;
     display: flex;
     flex-direction: column;
-    gap: 0.9rem;
+    gap: 1.1rem;
   }
   .review-card .stars {
-    color: var(--gold);
-    font-size: 1rem;
-    letter-spacing: 0.06em;
+    color: var(--lux-accent);
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
   }
   .review-card .quote {
-    color: var(--ink);
-    font-size: 1rem;
-    line-height: 1.55;
+    font-family: var(--serif);
+    color: var(--lux-ink);
+    font-size: 1.1rem;
+    line-height: 1.5;
     flex-grow: 1;
+    font-style: italic;
   }
   .byline {
     display: flex;
     flex-direction: column;
-    gap: 0.18rem;
-    padding-top: 0.6rem;
-    border-top: 1px solid rgba(176, 38, 255, 0.15);
+    gap: 0.25rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--lux-border);
   }
   .byline .name {
-    font-weight: 700;
-    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 600;
+    color: var(--lux-ink);
     font-size: 0.95rem;
+    letter-spacing: 0.01em;
   }
   .byline .meta {
-    color: var(--muted);
-    font-size: 0.78rem;
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    color: var(--lux-muted);
+    font-size: 0.85rem;
+    font-family: var(--small-caps);
+    font-style: italic;
   }
 
   /* Services grid */
@@ -910,49 +933,53 @@
     gap: 1rem;
   }
   .service-card {
-    padding: 1.5rem;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 0.65rem;
+    padding: 1.75rem 1.6rem;
+    background: var(--lux-surface);
+    border: 1px solid var(--lux-border);
+    border-radius: 0.45rem;
   }
   .service-card h3 {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--neon-blue);
-    margin-bottom: 0.55rem;
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--lux-ink);
+    margin-bottom: 0.7rem;
     letter-spacing: -0.005em;
   }
   .service-card p {
-    color: var(--muted);
-    font-size: 0.92rem;
-    line-height: 1.55;
+    color: var(--lux-muted);
+    font-size: 0.95rem;
+    line-height: 1.65;
   }
 
   /* Hours */
   .hours-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 0.55rem;
+    gap: 0;
     max-width: 32rem;
   }
   .hours-row {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    padding: 0.85rem 1.1rem;
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 0.5rem;
+    padding: 0.95rem 0;
+    border-bottom: 1px solid var(--lux-border);
     font-size: 0.95rem;
   }
+  .hours-row:last-child {
+    border-bottom: none;
+  }
   .hours-row .day {
-    color: var(--ink);
-    font-weight: 600;
+    color: var(--lux-ink);
+    font-weight: 500;
+    font-family: var(--sans);
   }
   .hours-row .time {
-    color: var(--muted);
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 0.88rem;
+    color: var(--lux-accent);
+    font-family: var(--small-caps);
+    font-style: italic;
+    font-size: 1rem;
   }
 
   /* Contact form */
@@ -973,43 +1000,43 @@
   }
 
   .field > span {
-    font-size: 0.78rem;
-    letter-spacing: 0.12em;
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--muted);
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    color: var(--lux-muted);
+    font-weight: 500;
   }
   .field .opt {
-    font-style: normal;
-    opacity: 0.6;
+    font-style: italic;
+    opacity: 0.75;
     text-transform: none;
     letter-spacing: 0;
-    font-family: inherit;
+    font-family: var(--small-caps);
   }
 
   .field input,
   .field select,
   .field textarea {
-    padding: 0.85rem 1rem;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0.45rem;
-    color: var(--ink);
-    font-size: 0.95rem;
-    font-family: inherit;
-    transition: border-color 0.15s, background 0.15s;
+    padding: 0.95rem 1rem;
+    background: transparent;
+    border: 1px solid var(--lux-border);
+    border-radius: 0.3rem;
+    color: var(--lux-ink);
+    font-size: 1rem;
+    font-family: var(--sans);
+    transition: border-color 0.2s, background 0.2s;
   }
   .field textarea {
     resize: vertical;
-    font-family: inherit;
-    line-height: 1.5;
+    line-height: 1.55;
   }
   .field input:focus,
   .field select:focus,
   .field textarea:focus {
     outline: none;
-    border-color: rgba(0, 240, 255, 0.55);
-    background: rgba(0, 240, 255, 0.04);
+    border-color: var(--lux-accent);
+    background: var(--lux-surface);
   }
 
   .form-actions {
@@ -1021,64 +1048,69 @@
   }
 
   .submit {
-    padding: 0.95rem 1.6rem;
-    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-    color: var(--bg);
+    padding: 1rem 2.2rem;
+    background: var(--lux-accent);
+    color: var(--lux-bg);
     border: none;
-    border-radius: 0.5rem;
-    font-weight: 800;
-    font-size: 0.95rem;
-    font-family: inherit;
-    letter-spacing: 0.01em;
+    border-radius: 0.3rem;
+    font-weight: 600;
+    font-size: 0.8rem;
+    font-family: var(--sans);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
     cursor: pointer;
-    transition: transform 0.12s, box-shadow 0.12s;
+    transition: background 0.2s, transform 0.15s;
   }
   .submit:hover {
+    background: var(--lux-ink);
     transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(0, 240, 255, 0.2);
   }
 
   .privacy {
-    color: var(--muted);
-    font-size: 0.78rem;
-    max-width: 32ch;
-    line-height: 1.45;
+    color: var(--lux-muted-2);
+    font-size: 0.82rem;
+    font-style: italic;
+    font-family: var(--small-caps);
+    max-width: 36ch;
+    line-height: 1.5;
   }
 
   .form-success {
     padding: 2.5rem;
-    background: rgba(0, 240, 255, 0.05);
-    border: 1px solid rgba(0, 240, 255, 0.35);
-    border-radius: 0.65rem;
+    background: var(--lux-surface);
+    border: 1px solid var(--lux-accent-line);
+    border-left: 2px solid var(--lux-accent);
+    border-radius: 0 0.45rem 0.45rem 0;
     max-width: 38rem;
   }
   .form-success .success-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.2rem;
-    height: 2.2rem;
-    background: var(--neon-blue);
-    color: var(--bg);
+    width: 2.4rem;
+    height: 2.4rem;
+    background: transparent;
+    border: 1.5px solid var(--lux-accent);
+    color: var(--lux-accent);
     border-radius: 50%;
-    font-weight: 900;
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 0 18px rgba(0, 240, 255, 0.5);
+    font-weight: 400;
+    font-size: 1.1rem;
+    margin-bottom: 1.2rem;
   }
   .form-success h3 {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: var(--ink);
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.012em;
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--lux-ink);
+    margin-bottom: 0.6rem;
+    letter-spacing: -0.01em;
   }
   .form-success p {
-    color: var(--muted);
-    line-height: 1.55;
+    color: var(--lux-muted);
+    line-height: 1.6;
   }
   .form-success strong {
-    color: var(--ink);
+    color: var(--lux-ink);
     font-weight: 600;
   }
 
@@ -1087,65 +1119,84 @@
     text-align: left;
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
+    gap: 1.4rem;
     padding-top: clamp(3rem, 8vw, 6rem);
     padding-bottom: clamp(4rem, 10vw, 8rem);
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid var(--lux-border);
     margin-top: 2rem;
   }
   .visit .kicker {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 0.8rem;
-    letter-spacing: 0.22em;
+    font-family: var(--sans);
+    font-size: 0.74rem;
+    letter-spacing: 0.28em;
     text-transform: uppercase;
-    color: var(--neon-blue);
+    font-weight: 500;
+    color: var(--lux-accent);
   }
   .visit h2 {
-    font-size: clamp(1.75rem, 5vw, 3.25rem);
-    font-weight: 800;
-    line-height: 1.08;
-    color: var(--ink);
-    letter-spacing: -0.022em;
+    font-family: var(--serif);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 400;
+    line-height: 1.05;
+    color: var(--lux-ink);
+    letter-spacing: -0.015em;
+    padding-bottom: 0.05em;
   }
   .visit .contact {
-    font-size: 1.15rem;
-    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--lux-ink);
   }
   .visit .contact a {
-    color: var(--neon-blue);
+    color: var(--lux-accent);
     text-decoration: none;
-    border-bottom: 1px solid rgba(0, 240, 255, 0.4);
+    border-bottom: 1px solid var(--lux-accent-line);
+    padding-bottom: 0.05em;
+  }
+  .visit .contact a:hover {
+    color: var(--lux-ink);
+    border-bottom-color: var(--lux-ink);
   }
   .directions-cta {
     align-self: flex-start;
-    padding: 0.85rem 1.4rem;
-    background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-    color: var(--bg);
+    padding: 1rem 2.2rem;
+    background: transparent;
+    color: var(--lux-accent);
+    border: 1px solid var(--lux-accent);
     text-decoration: none;
-    font-weight: 700;
-    border-radius: 0.5rem;
-    letter-spacing: 0.01em;
-    transition: transform 0.15s;
+    font-weight: 500;
+    font-size: 0.8rem;
+    font-family: var(--sans);
+    border-radius: 0.3rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: background 0.2s, color 0.2s;
   }
   .directions-cta:hover {
-    transform: translateY(-1px);
+    background: var(--lux-accent);
+    color: var(--lux-bg);
   }
   .testimonial {
-    color: var(--ink);
-    font-size: 1.05rem;
+    font-family: var(--serif);
+    color: var(--lux-ink);
+    font-size: 1.15rem;
     line-height: 1.55;
-    border-left: 2px solid var(--neon-purple);
-    padding-left: 1.2rem;
-    max-width: 56ch;
+    font-style: italic;
+    border-left: 2px solid var(--lux-oxblood);
+    padding-left: 1.4rem;
+    max-width: 60ch;
   }
   .testimonial em {
     font-style: normal;
   }
   .fineprint {
-    color: var(--muted);
-    font-size: 0.8rem;
-    letter-spacing: 0.04em;
-    margin-top: 1rem;
+    color: var(--lux-muted-2);
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-family: var(--sans);
+    margin-top: 1.5rem;
   }
 
   /* Reveal rules live in app.css (global) so Svelte's CSS scoper
@@ -1162,12 +1213,12 @@
     inset: 0;
     border-radius: inherit;
     background: radial-gradient(
-      260px circle at var(--mx, 50%) var(--my, 50%),
-      rgba(0, 240, 255, 0.09),
+      300px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(197, 165, 114, 0.08),
       transparent 55%
     );
     opacity: 0;
-    transition: opacity 0.25s ease;
+    transition: opacity 0.3s ease;
     pointer-events: none;
     z-index: 0;
   }
@@ -1282,10 +1333,11 @@
   }
 
   .loading-status {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
-    color: var(--muted);
+    font-family: var(--small-caps);
+    font-style: italic;
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+    color: var(--lux-muted);
     margin-top: 0.5rem;
   }
 
@@ -1307,40 +1359,43 @@
       z-index: 50;
       padding: 0.55rem 0.55rem calc(0.55rem + env(safe-area-inset-bottom));
       gap: 0.45rem;
-      background: rgba(7, 7, 26, 0.85);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-top: 1px solid rgba(0, 240, 255, 0.18);
+      background: rgba(14, 14, 16, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--lux-border);
     }
     .mobile-cta-btn {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 0.18rem;
-      padding: 0.65rem 0.4rem;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 0.5rem;
-      color: var(--ink);
+      gap: 0.2rem;
+      padding: 0.7rem 0.4rem;
+      background: transparent;
+      border: 1px solid var(--lux-border);
+      border-radius: 0.3rem;
+      color: var(--lux-ink);
       text-decoration: none;
       font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
+      font-weight: 500;
+      letter-spacing: 0.05em;
       transition: background 0.15s, border-color 0.15s;
     }
     .mobile-cta-btn:active {
-      background: rgba(0, 240, 255, 0.12);
-      border-color: rgba(0, 240, 255, 0.4);
+      background: var(--lux-accent-soft);
+      border-color: var(--lux-accent-line);
     }
     .mobile-cta-icon {
       font-size: 1.05rem;
-      color: var(--neon-blue);
+      color: var(--lux-accent);
       line-height: 1;
     }
     .mobile-cta-label {
-      font-size: 0.72rem;
-      color: var(--muted);
+      font-family: var(--sans);
+      font-size: 0.66rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--lux-muted);
     }
     /* Make sure the visit footer doesn't sit right under the CTA bar */
     .visit {
