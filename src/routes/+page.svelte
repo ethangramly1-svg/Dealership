@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Canvas } from '@threlte/core';
   import { fade } from 'svelte/transition';
+  import { cubicOut } from 'svelte/easing';
   import Scene from '$lib/Scene.svelte';
   import Renderer from '$lib/Renderer.svelte';
   import { bindWindowScroll } from '$lib/scroll.svelte';
@@ -8,6 +9,21 @@
   import { loadState } from '$lib/loadState.svelte';
   import { reveal, spotlight } from '$lib/animations';
   import '$lib/theatre'; // side-effect: boots Theatre.js Studio panel in dev
+
+  // Custom transition for Ferrari part labels — same translate + scale +
+  // blur language as the section reveals, but composed with the static
+  // .label transform so the dot-to-card offset isn't clobbered.
+  function labelReveal(_node: HTMLElement, { delay = 0, duration = 1100 } = {}) {
+    return {
+      delay,
+      duration,
+      easing: cubicOut,
+      css: (t: number, u: number) => `
+        transform: translate(8px, -50%) translateY(${u * 50}px) scale(${0.92 + 0.08 * t});
+        filter: blur(${u * 14}px);
+      `
+    };
+  }
 
   let corridorEl: HTMLElement | undefined = $state();
 
@@ -171,9 +187,13 @@
 
 <!-- HTML labels positioned via per-frame Vector3.project() — see Scene.svelte useTask. -->
 <div class="labels-overlay">
-  {#each labelState.items as label (label.id)}
+  {#each labelState.items as label, i (label.id)}
     {#if label.visible}
-      <div class="label" style="left: {label.x}px; top: {label.y}px; opacity: {label.opacity};">
+      <div
+        class="label"
+        style="left: {label.x}px; top: {label.y}px; opacity: {label.opacity};"
+        transition:labelReveal={{ delay: i * 80 }}
+      >
         <div class="dot"></div>
         <div class="card">
           <span class="t">{label.title}</span>
